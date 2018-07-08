@@ -1,0 +1,20 @@
+{
+    "sv_convimprov_display_results_as_conversations.txt": {
+        "global_cache": false,
+        "version_id": 1000011,
+        "version_string": "1.0.0 Alpha 1",
+        "hash": "cb183ffbc8063f6033b3b646e2051422"
+    },
+    "sv_convimprov_search_conversations.txt": {
+        "global_cache": false,
+        "version_id": 1000011,
+        "version_string": "1.0.0 Alpha 1",
+        "hash": "9a7323873500c3b9780f05a9367978ba"
+    },
+    "sv_convimprov_this_conversation.txt": {
+        "global_cache": false,
+        "version_id": 1000011,
+        "version_string": "1.0.0 Alpha 1",
+        "hash": "6f436dfe04623e862d043b80a3d07518"
+    }
+}

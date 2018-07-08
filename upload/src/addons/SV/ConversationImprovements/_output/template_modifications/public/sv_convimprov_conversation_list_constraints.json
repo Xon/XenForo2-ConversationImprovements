@@ -1,0 +1,9 @@
+{
+    "template": "conversation_list",
+    "description": "Adds search constraints to the conversation list",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "/$/isU",
+    "replace": "$0\n<xf:macro template=\"sv_convimprov_conversation_macros\" name=\"search_constraints\"\n\t\t  arg-conversation=\"{{ null }}\" />"
+}
