@@ -98,6 +98,13 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
         };
 
+        $alters['xf_conversation_master'] = function (Alter $table) {
+            /** @var Create|Alter $table */
+            $this->addOrChangeColumn($table, 'last_edit_date', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
+        };
+
         return $alters;
     }
 
@@ -109,6 +116,14 @@ class Setup extends AbstractSetup
         $alters = [];
 
         $alters['xf_conversation_message'] = function (Alter $table) {
+            $table->dropColumns([
+                'last_edit_date',
+                'last_edit_user_id',
+                'edit_count'
+            ]);
+        };
+
+        $alters['xf_conversation_master'] = function (Alter $table) {
             $table->dropColumns([
                 'last_edit_date',
                 'last_edit_user_id',

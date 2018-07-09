@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Service\\Conversation\\Editor",
+    "to_class": "SV\\ConversationImprovements\\XF\\Service\\Conversation\\Editor",
+    "execute_order": 10,
+    "active": true
+}

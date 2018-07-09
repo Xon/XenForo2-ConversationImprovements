@@ -14,6 +14,11 @@
         "version_string": "2.0.0 Alpha 1",
         "hash": "b42de035898205aed4032d037d6f6d26"
     },
+    "public/sv_convimprov_conversation_view_history.html": {
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "04a7a7f0b6ef6d9780465904a338195b"
+    },
     "public/sv_convimprov_search_form_conversation_message.html": {
         "version_id": 2000011,
         "version_string": "2.0.0 Alpha 1",

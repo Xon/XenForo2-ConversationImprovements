@@ -17,6 +17,29 @@ use XF\Mvc\Entity\Structure;
 class ConversationMaster extends XFCP_ConversationMaster
 {
     /**
+     * @param string $error
+     *
+     * @return bool
+     */
+    public function canViewHistory(&$error = null)
+    {
+        $visitor = \XF::visitor();
+        if (!$visitor->user_id) {
+            return false;
+        }
+
+        if (!$this->app()->options()->editHistory['enabled']) {
+            return false;
+        }
+
+        if ($visitor->hasPermission('conversation', 'editAnyMessage')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param Structure $structure
      *
      * @return Structure
@@ -25,6 +48,19 @@ class ConversationMaster extends XFCP_ConversationMaster
     {
         $structure = parent::getStructure($structure);
 
+        $structure->columns['last_edit_date'] = [
+            'type'    => self::UINT,
+            'default' => 0
+        ];
+        $structure->columns['last_edit_user_id'] = [
+            'type'    => self::UINT,
+            'default' => 0
+        ];
+        $structure->columns['edit_count'] = [
+            'type'    => self::UINT,
+            'default' => 0,
+            'forced'  => true
+        ];
         $structure->behaviors['XF:Indexable'] = [
             'checkForUpdates' => [
                 'title',

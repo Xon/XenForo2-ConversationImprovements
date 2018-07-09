@@ -10,5 +10,8 @@
     },
     "public/sv_convimprov_conversation_view_constraints.json": {
         "hash": "0adee0cb721d6f6fe33776d4aa160904"
+    },
+    "public/sv_convimprov_conversation_view_history.json": {
+        "hash": "92a71c26d3796db9e39a8b23a25c2f3d"
     }
 }

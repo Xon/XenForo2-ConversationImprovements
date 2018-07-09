@@ -1,0 +1,5 @@
+<xf:if is="$conversation.edit_count and $conversation.canViewHistory()">
+	<xf:button href="{{ link('conversations/history', $conversation) }}" class="button--link" overlay="true">
+		{{ phrase('history') }}
+	</xf:button>
+</xf:if>

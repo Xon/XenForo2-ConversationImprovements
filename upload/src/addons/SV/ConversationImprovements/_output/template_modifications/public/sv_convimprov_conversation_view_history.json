@@ -1,0 +1,9 @@
+{
+    "template": "conversation_view",
+    "description": "Adds a 'History' button to the conversation view button group",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "/<xf:if is=\"\\$conversation.canEdit\\(\\)\">.+<\\/xf:if>/isU\n",
+    "replace": "$0\n<xf:include template=\"sv_convimprov_conversation_view_history\" />"
+}
