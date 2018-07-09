@@ -1,4 +1,16 @@
 {
+    "option.sv_conversation_with_no_one.txt": {
+        "global_cache": false,
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "c60eb07edcacbbf160203dd642ea7f49"
+    },
+    "option_explain.sv_conversation_with_no_one.txt": {
+        "global_cache": false,
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "13db248a06f6c0186aa7813c2fb8a42c"
+    },
     "permission.conversation_canReply.txt": {
         "global_cache": false,
         "version_id": 2000011,

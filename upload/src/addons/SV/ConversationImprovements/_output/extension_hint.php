@@ -16,6 +16,7 @@ namespace SV\ConversationImprovements\XF\Pub\Controller
 
 namespace SV\ConversationImprovements\XF\Service\Conversation
 {
+	class XFCP_Creator extends \XF\Service\Conversation\Creator {}
 	class XFCP_Editor extends \XF\Service\Conversation\Editor {}
 	class XFCP_MessageEditor extends \XF\Service\Conversation\MessageEditor {}
 }
