@@ -36,6 +36,10 @@ class ConversationMessage extends XFCP_ConversationMessage
             return true;
         }
 
+        if ($visitor->hasPermission('conversation', 'sv_manageConversation')) {
+            return true;
+        }
+
         return false;
     }
 

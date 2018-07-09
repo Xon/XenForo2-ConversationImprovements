@@ -1,4 +1,22 @@
 {
+    "permission.conversation_canReply.txt": {
+        "global_cache": false,
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "9a1427ce877a831d48205f3104815597"
+    },
+    "permission.conversation_replyLimit.txt": {
+        "global_cache": false,
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "f2a999d840d691424a1941635b0f29e1"
+    },
+    "permission.conversation_sv_manageConversation.txt": {
+        "global_cache": false,
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "91094473b99ae828253c3e6dc46b7c92"
+    },
     "sv_convimprov_display_results_as_conversations.txt": {
         "global_cache": false,
         "version_id": 1000011,

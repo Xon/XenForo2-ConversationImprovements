@@ -178,10 +178,25 @@ class Setup extends AbstractSetup
         $applied = false;
 
         if (!$previousVersion) {
-            // TODO: default permissions
-            // can reply if can start
-            // reply limit -1 if can start
-            // can manage if can edit any
+            $this->applyGlobalPermission(
+                'conversation',
+                'canReply',
+                'conversation',
+                'start'
+            );
+            $this->applyGlobalPermissionInt(
+                'conversation',
+                'replyLimit',
+                -1,
+                'conversation',
+                'start'
+            );
+            $this->applyGlobalPermission(
+                'conversation',
+                'sv_manageConversation',
+                'conversation',
+                'editAnyMessage'
+            );
         }
 
         return $applied;

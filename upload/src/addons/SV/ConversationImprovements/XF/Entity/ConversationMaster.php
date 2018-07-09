@@ -17,6 +17,37 @@ use XF\Mvc\Entity\Structure;
 class ConversationMaster extends XFCP_ConversationMaster
 {
     /**
+     * @return bool
+     */
+    public function canEdit()
+    {
+        $visitor = \XF::visitor();
+        if ($visitor->hasPermission('conversation', 'sv_manageConversation')) {
+            return true;
+        }
+
+        return parent::canEdit();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canReply()
+    {
+        $visitor = \XF::visitor();
+        if (!$visitor->hasPermission('conversation', 'canReply')) {
+            return false;
+        }
+
+        $replyLimit = $visitor->hasPermission('conversation', 'replyLimit');
+        if (($replyLimit != -1) && ($this->reply_count >= $replyLimit)) {
+            return false;
+        }
+
+        return parent::canReply();
+    }
+
+    /**
      * @param string $error
      *
      * @return bool
@@ -32,11 +63,11 @@ class ConversationMaster extends XFCP_ConversationMaster
             return false;
         }
 
-        if ($visitor->hasPermission('conversation', 'editAnyMessage')) {
+        if ($visitor->hasPermission('conversation', 'sv_manageConversation')) {
             return true;
         }
 
-        return false;
+        return ($this->user_id == $visitor->user_id);
     }
 
     /**
