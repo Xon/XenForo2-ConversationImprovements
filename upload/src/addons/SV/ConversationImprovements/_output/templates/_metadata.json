@@ -4,6 +4,16 @@
         "version_string": "1.0.0 Alpha 1",
         "hash": "05816d1fcd92539aa71cd245098bd3d3"
     },
+    "public/sv_convimprov_conversation_message_macros_history.html": {
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "c9870894b81e66cd439ab5b91a68fe5f"
+    },
+    "public/sv_convimprov_conversation_message_macros_target.html": {
+        "version_id": 2000011,
+        "version_string": "2.0.0 Alpha 1",
+        "hash": "b42de035898205aed4032d037d6f6d26"
+    },
     "public/sv_convimprov_search_form_conversation_message.html": {
         "version_id": 2000011,
         "version_string": "2.0.0 Alpha 1",

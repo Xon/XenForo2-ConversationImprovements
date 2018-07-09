@@ -17,6 +17,29 @@ use XF\Mvc\Entity\Structure;
 class ConversationMessage extends XFCP_ConversationMessage
 {
     /**
+     * @param string $error
+     *
+     * @return bool
+     */
+    public function canViewHistory(&$error = null)
+    {
+        $visitor = \XF::visitor();
+        if (!$visitor->user_id) {
+            return false;
+        }
+
+        if (!$this->app()->options()->editHistory['enabled']) {
+            return false;
+        }
+
+        if ($visitor->hasPermission('conversation', 'editAnyMessage')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function isFirstMessage()
@@ -54,6 +77,19 @@ class ConversationMessage extends XFCP_ConversationMessage
     {
         $structure = parent::getStructure($structure);
 
+        $structure->columns['last_edit_date'] = [
+            'type'    => self::UINT,
+            'default' => 0
+        ];
+        $structure->columns['last_edit_user_id'] = [
+            'type'    => self::UINT,
+            'default' => 0
+        ];
+        $structure->columns['edit_count'] = [
+            'type'    => self::UINT,
+            'default' => 0,
+            'forced'  => true
+        ];
         $structure->behaviors['XF:Indexable'] = [
             'checkForUpdates' => [
                 'conversation_id',

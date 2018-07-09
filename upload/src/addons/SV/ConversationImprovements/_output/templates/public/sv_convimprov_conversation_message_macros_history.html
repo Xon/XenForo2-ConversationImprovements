@@ -1,0 +1,9 @@
+<xf:if is="$message.edit_count and $message.canViewHistory()">
+	<a href="{{ link('conversations/messages/history', $message) }}"
+		class="actionBar-action actionBar-action--history actionBar-action--menuItem"
+		data-xf-click="toggle"
+		data-target="< .js-message | .js-historyTarget">
+
+		{{ phrase('history') }}
+	</a>
+</xf:if>

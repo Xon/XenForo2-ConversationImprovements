@@ -4,5 +4,11 @@
     },
     "XF-Entity-ConversationMessage_SV-ConversationImprovements-XF-Entity-ConversationMessage.json": {
         "hash": "3190b8845294fd1b359add7daafa0c45"
+    },
+    "XF-Pub-Controller-Conversation_SV-ConversationImprovements-XF-Pub-Controller-Conversation.json": {
+        "hash": "2ecd4612a073fe623af6881ddbb588f6"
+    },
+    "XF-Service-Conversation-MessageEditor_SV-ConversationImprovements-XF-Service-Conversation-MessageEditor.json": {
+        "hash": "9faf10f5796a8d9f0d6b7efc7624a394"
     }
 }

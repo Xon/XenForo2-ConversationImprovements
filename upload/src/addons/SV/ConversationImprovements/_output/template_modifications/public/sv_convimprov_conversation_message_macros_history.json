@@ -1,0 +1,9 @@
+{
+    "template": "conversation_message_macros",
+    "description": "Adds a 'History' link to the conversation message action bar",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:if is=\"$message.canCleanSpam()\">",
+    "replace": "<xf:include template=\"sv_convimprov_conversation_message_macros_history\" />\n$0"
+}

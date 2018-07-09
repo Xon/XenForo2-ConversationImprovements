@@ -1,0 +1,9 @@
+{
+    "template": "conversation_message_macros",
+    "description": "Adds a history target to conversation messages",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "</footer>",
+    "replace": "<xf:include template=\"sv_convimprov_conversation_message_macros_target\" />\n$0"
+}
