@@ -13,6 +13,10 @@ use XF\Mvc\Entity\Structure;
 
 /**
  * Extends \XF\Entity\ConversationMaster
+ *
+ * @property int last_edit_date
+ * @property int last_edit_user_id
+ * @property int edit_count
  */
 class ConversationMaster extends XFCP_ConversationMaster
 {

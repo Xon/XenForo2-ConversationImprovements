@@ -44,6 +44,26 @@ class Setup extends AbstractSetup
         $this->applyDefaultPermissions();
     }
 
+    public function upgrade2000100Step1()
+    {
+        $sm = $this->schemaManager();
+
+        $sm->alterTable('xf_conversation_master', function (Alter $table) {
+            $table->renameColumn('conversation_last_edit_date', 'last_edit_date');
+            $table->renameColumn('conversation_last_edit_user_id', 'last_edit_user_id');
+            $table->renameColumn('conversation_edit_count', 'edit_count');
+        });
+    }
+
+    public function upgrade2000100Step2()
+    {
+        $sm = $this->schemaManager();
+
+        foreach ($this->getAlters() as $table => $schema) {
+            $sm->alterTable($table, $schema);
+        }
+    }
+
     /**
      * @param int   $previousVersion
      * @param array $stateChanges

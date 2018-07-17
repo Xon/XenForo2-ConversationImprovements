@@ -13,6 +13,10 @@ use XF\Mvc\Entity\Structure;
 
 /**
  * Extends \XF\Entity\ConversationMessage
+ *
+ * @property int last_edit_date
+ * @property int last_edit_user_id
+ * @property int edit_count
  */
 class ConversationMessage extends XFCP_ConversationMessage
 {

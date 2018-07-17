@@ -55,9 +55,9 @@ ALTER TABLE `xf_conversation_message`
     ADD COLUMN `last_edit_date` int not null default 0,
     ADD COLUMN `last_edit_user_id` int not null default 0;
 ALTER TABLE `xf_conversation_master` 
-  ADD COLUMN `conversation_edit_count` int not null default 0,
-  ADD COLUMN `conversation_last_edit_date` int not null default 0,
-  ADD COLUMN `conversation_last_edit_user_id` int not null default 0;
+  ADD COLUMN `edit_count` int not null default 0,
+  ADD COLUMN `last_edit_date` int not null default 0,
+  ADD COLUMN `last_edit_user_id` int not null default 0;
 ```
 
 #Permissions
