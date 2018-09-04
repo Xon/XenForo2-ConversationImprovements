@@ -1,14 +1,8 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\ConversationImprovements;
 
+use SV\Utils\InstallerHelper;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -21,6 +15,8 @@ use XF\Db\Schema\Create;
  */
 class Setup extends AbstractSetup
 {
+    // from https://github.com/Xon/XenForo2-Utils cloned to src/addons/SV/Utils
+    use InstallerHelper;
     use StepRunnerInstallTrait;
     use StepRunnerUpgradeTrait;
     use StepRunnerUninstallTrait;
@@ -152,40 +148,6 @@ class Setup extends AbstractSetup
         };
 
         return $alters;
-    }
-
-    /**
-     * @param Create|Alter $table
-     * @param string       $name
-     * @param string|null  $type
-     * @param string|null  $length
-     *
-     * @return \XF\Db\Schema\Column
-     *
-     * @throws \LogicException If table is unknown schema object
-     */
-    protected function addOrChangeColumn(
-        $table,
-        $name,
-        $type = null,
-        $length = null
-    ) {
-        if ($table instanceof Create) {
-            /** @var Create $table */
-            $table->checkExists(true);
-            return $table->addColumn($name, $type, $length);
-        } elseif ($table instanceof Alter) {
-            /** @var Alter $table */
-            if ($table->getColumnDefinition($name)) {
-                return $table->changeColumn($name, $type, $length);
-            }
-
-            return $table->addColumn($name, $type, $length);
-        }
-
-        throw new \LogicException(
-            "Unknown schema DDL type " . get_class($table)
-        );
     }
 
     /**
