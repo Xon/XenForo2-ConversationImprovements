@@ -25,7 +25,7 @@ class Conversation extends XFCP_Conversation
     {
         return $this->rerouteController('XF:EditHistory', 'index', [
             'content_type' => 'conversation',
-            'content_id'   => $params->conversation_id
+            'content_id'   => $params->get('conversation_id')
         ]);
     }
 
@@ -38,7 +38,7 @@ class Conversation extends XFCP_Conversation
     {
         return $this->rerouteController('XF:EditHistory', 'index', [
             'content_type' => 'conversation_message',
-            'content_id'   => $params->message_id
+            'content_id'   => $params->get('message_id')
         ]);
     }
 }

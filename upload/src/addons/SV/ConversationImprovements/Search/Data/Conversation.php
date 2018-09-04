@@ -26,7 +26,8 @@ class Conversation extends AbstractData
      */
     public function getIndexData(Entity $entity)
     {
-        /** @var \XF\Entity\ConversationMaster $entity */
+        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMaster $entity */
+        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $firstMessage */
         $firstMessage = $entity->FirstMessage;
 
         return IndexRecord::create('conversation', $entity->conversation_id, [
@@ -41,6 +42,7 @@ class Conversation extends AbstractData
 
     /**
      * @param \XF\Entity\ConversationMaster $entity
+     * @return array
      */
     protected function getMetadata(\XF\Entity\ConversationMaster $entity)
     {

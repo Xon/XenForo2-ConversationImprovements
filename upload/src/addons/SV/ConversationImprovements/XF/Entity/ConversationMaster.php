@@ -17,6 +17,7 @@ use XF\Mvc\Entity\Structure;
  * @property int last_edit_date
  * @property int last_edit_user_id
  * @property int edit_count
+ * @property string title_
  */
 class ConversationMaster extends XFCP_ConversationMaster
 {
@@ -56,7 +57,7 @@ class ConversationMaster extends XFCP_ConversationMaster
      *
      * @return bool
      */
-    public function canViewHistory(&$error = null)
+    public function canViewHistory(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         $visitor = \XF::visitor();
         if (!$visitor->user_id) {

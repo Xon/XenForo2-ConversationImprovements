@@ -63,6 +63,7 @@ class Editor extends XFCP_Editor
      */
     public function setTitle($title)
     {
+        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMaster $conversation */
         $conversation = $this->conversation;
 
         $setupHistory = !$conversation->isChanged('title');

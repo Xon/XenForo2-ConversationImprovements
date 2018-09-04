@@ -65,8 +65,7 @@ class ConversationMessage extends AbstractHandler
     }
 
     /**
-     * @param Entity $entity
-     *
+     * @param Entity $content
      * @return string
      */
     public function getContentLink(Entity $content)
@@ -84,8 +83,6 @@ class ConversationMessage extends AbstractHandler
      */
     public function getBreadcrumbs(Entity $content)
     {
-        $breadrumbs = [];
-
         /** @var \XF\Mvc\Router $router */
         $router = \XF::app()->router('public');
 
@@ -116,7 +113,7 @@ class ConversationMessage extends AbstractHandler
         EditHistory $previous = null
     ) {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $content */
-        /** @var \XF\Service\Conversation\MessageEditor $editor */
+        /** @var \SV\ConversationImprovements\XF\Service\Conversation\MessageEditor $editor */
         $editor = \XF::app()->service('XF:Conversation\MessageEditor', $content);
 
         $editor->logEdit(false);

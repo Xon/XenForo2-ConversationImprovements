@@ -50,6 +50,7 @@ class ConversationMessage extends AbstractData
 
     /**
      * @param \XF\Entity\ConversationMessage $entity
+     * @return array
      */
     protected function getMetadata(\XF\Entity\ConversationMessage $entity)
     {
@@ -155,9 +156,9 @@ class ConversationMessage extends AbstractData
     }
 
     /**
-     * @return \XF\Search\Query\Query $query
-     * @param \XF\Http\Request        $request
-     * @param array                   $urlConstraints
+     * @param \XF\Search\Query\Query $query
+     * @param \XF\Http\Request       $request
+     * @param array                  $urlConstraints
      */
     public function applyTypeConstraintsFromInput(
         \XF\Search\Query\Query $query,
@@ -270,7 +271,7 @@ class ConversationMessage extends AbstractData
      */
     public function canIncludeInResults(Entity $entity, array $resultIds)
     {
-        /** @var \XF\Entity\ConversationMessage $entity */
+        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $entity */
         $conversationId = $entity->conversation_id;
         $conversationKey = "conversation-{$conversationId}";
         if (isset($resultIds[$conversationKey]) && $entity->isFirstMessage()) {

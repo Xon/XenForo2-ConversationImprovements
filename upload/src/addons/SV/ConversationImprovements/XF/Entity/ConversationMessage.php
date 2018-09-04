@@ -17,6 +17,7 @@ use XF\Mvc\Entity\Structure;
  * @property int last_edit_date
  * @property int last_edit_user_id
  * @property int edit_count
+ * @property string message_
  */
 class ConversationMessage extends XFCP_ConversationMessage
 {
