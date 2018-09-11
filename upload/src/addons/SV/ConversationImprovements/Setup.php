@@ -27,7 +27,8 @@ class Setup extends AbstractSetup
     public function installStep1()
     {
         $sm = $this->schemaManager();
-        foreach ($this->getAlters() as $table => $schema) {
+        foreach ($this->getAlters() as $table => $schema)
+        {
             $sm->alterTable($table, $schema);
         }
     }
@@ -40,24 +41,18 @@ class Setup extends AbstractSetup
         $this->applyDefaultPermissions();
     }
 
-    public function upgrade2000100Step1()
+    public function upgrade2000300Step1()
     {
         $sm = $this->schemaManager();
 
         $sm->alterTable('xf_conversation_master', function (Alter $table) {
-            $table->renameColumn('conversation_last_edit_date', 'last_edit_date');
-            $table->renameColumn('conversation_last_edit_user_id', 'last_edit_user_id');
-            $table->renameColumn('conversation_edit_count', 'edit_count');
+
         });
     }
 
-    public function upgrade2000100Step2()
+    public function upgrade2000300Step2()
     {
-        $sm = $this->schemaManager();
-
-        foreach ($this->getAlters() as $table => $schema) {
-            $sm->alterTable($table, $schema);
-        }
+        $this->installStep1();
     }
 
     /**
@@ -66,7 +61,8 @@ class Setup extends AbstractSetup
      */
     public function postUpgrade($previousVersion, array &$stateChanges)
     {
-        if ($this->applyDefaultPermissions($previousVersion)) {
+        if ($this->applyDefaultPermissions($previousVersion))
+        {
             $this->app->jobManager()->enqueueUnique(
                 'permissionRebuild',
                 'XF:PermissionRebuild',
@@ -82,7 +78,8 @@ class Setup extends AbstractSetup
     public function uninstallStep1()
     {
         $sm = $this->schemaManager();
-        foreach ($this->getReverseAlters() as $table => $schema) {
+        foreach ($this->getReverseAlters() as $table => $schema)
+        {
             $sm->alterTable($table, $schema);
         }
     }
@@ -108,14 +105,18 @@ class Setup extends AbstractSetup
         $alters = [];
 
         $alters['xf_conversation_message'] = function (Alter $table) {
-            /** @var Create|Alter $table */
             $this->addOrChangeColumn($table, 'last_edit_date', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
+
+            $table->dropColumns(['_likes', '_like_users']);
         };
 
         $alters['xf_conversation_master'] = function (Alter $table) {
-            /** @var Create|Alter $table */
+            $table->renameColumn('conversation_last_edit_date', 'last_edit_date');
+            $table->renameColumn('conversation_last_edit_user_id', 'last_edit_user_id');
+            $table->renameColumn('conversation_edit_count', 'edit_count');
+
             $this->addOrChangeColumn($table, 'last_edit_date', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
@@ -133,6 +134,7 @@ class Setup extends AbstractSetup
 
         $alters['xf_conversation_message'] = function (Alter $table) {
             $table->dropColumns([
+                '_likes', '_like_users',
                 'last_edit_date',
                 'last_edit_user_id',
                 'edit_count'
@@ -152,14 +154,14 @@ class Setup extends AbstractSetup
 
     /**
      * @param int|null $previousVersion
-     *
      * @return bool
      */
     protected function applyDefaultPermissions($previousVersion = null)
     {
         $applied = false;
 
-        if (!$previousVersion) {
+        if (!$previousVersion)
+        {
             $this->applyGlobalPermission(
                 'conversation',
                 'canReply',
