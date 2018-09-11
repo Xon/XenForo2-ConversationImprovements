@@ -109,13 +109,38 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
 
-            $table->dropColumns(['_likes', '_like_users']);
+            // XF legacy cleanup
+            //$table->dropColumns(['_likes', '_like_users']);
         };
 
         $alters['xf_conversation_master'] = function (Alter $table) {
-            $table->renameColumn('conversation_last_edit_date', 'last_edit_date');
-            $table->renameColumn('conversation_last_edit_user_id', 'last_edit_user_id');
-            $table->renameColumn('conversation_edit_count', 'edit_count');
+            // XF legacy cleanup
+            if ($table->getColumnDefinition('last_edit_date'))
+            {
+                $table->dropColumns('conversation_last_edit_date');
+            }
+            else
+            {
+                $table->renameColumn('conversation_last_edit_date', 'last_edit_date');
+            }
+
+            if ($table->getColumnDefinition('last_edit_user_id'))
+            {
+                $table->dropColumns('conversation_last_edit_user_id');
+            }
+            else
+            {
+                $table->renameColumn('conversation_last_edit_user_id', 'last_edit_user_id');
+            }
+
+            if ($table->getColumnDefinition('edit_count'))
+            {
+                $table->dropColumns('conversation_edit_count');
+            }
+            else
+            {
+                $table->renameColumn('conversation_edit_count', 'edit_count');
+            }
 
             $this->addOrChangeColumn($table, 'last_edit_date', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
