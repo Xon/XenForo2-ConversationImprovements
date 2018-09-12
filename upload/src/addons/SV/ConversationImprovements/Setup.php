@@ -27,6 +27,10 @@ class Setup extends AbstractSetup
     public function installStep1()
     {
         $sm = $this->schemaManager();
+        foreach ($this->getLegacyAlters() as $table => $schema)
+        {
+            $sm->alterTable($table, $schema);
+        }
         foreach ($this->getAlters() as $table => $schema)
         {
             $sm->alterTable($table, $schema);
@@ -43,15 +47,6 @@ class Setup extends AbstractSetup
 
     public function upgrade2000300Step1()
     {
-        $sm = $this->schemaManager();
-
-        $sm->alterTable('xf_conversation_master', function (Alter $table) {
-
-        });
-    }
-
-    public function upgrade2000300Step2()
-    {
         $this->installStep1();
     }
 
@@ -61,15 +56,7 @@ class Setup extends AbstractSetup
      */
     public function postUpgrade($previousVersion, array &$stateChanges)
     {
-        if ($this->applyDefaultPermissions($previousVersion))
-        {
-            $this->app->jobManager()->enqueueUnique(
-                'permissionRebuild',
-                'XF:PermissionRebuild',
-                [],
-                false
-            );
-        }
+        $this->applyDefaultPermissions($previousVersion);
     }
 
     /**
@@ -100,26 +87,22 @@ class Setup extends AbstractSetup
     /**
      * @return array
      */
-    protected function getAlters()
+    protected function getLegacyAlters()
     {
+        // addOrChangeColumn behaves poorly with renameColumn :(
+
         $alters = [];
 
         $alters['xf_conversation_message'] = function (Alter $table) {
-            $this->addOrChangeColumn($table, 'last_edit_date', 'int')->setDefault(0);
-            $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
-            $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
-
-            // XF legacy cleanup
-            //$table->dropColumns(['_likes', '_like_users']);
+            $table->dropColumns(['_likes', '_like_users']);
         };
 
         $alters['xf_conversation_master'] = function (Alter $table) {
-            // XF legacy cleanup
             if ($table->getColumnDefinition('last_edit_date'))
             {
                 $table->dropColumns('conversation_last_edit_date');
             }
-            else
+            else if ($table->getColumnDefinition('conversation_last_edit_date'))
             {
                 $table->renameColumn('conversation_last_edit_date', 'last_edit_date');
             }
@@ -128,7 +111,7 @@ class Setup extends AbstractSetup
             {
                 $table->dropColumns('conversation_last_edit_user_id');
             }
-            else
+            else if ($table->getColumnDefinition('conversation_last_edit_user_id'))
             {
                 $table->renameColumn('conversation_last_edit_user_id', 'last_edit_user_id');
             }
@@ -137,11 +120,29 @@ class Setup extends AbstractSetup
             {
                 $table->dropColumns('conversation_edit_count');
             }
-            else
+            else if ($table->getColumnDefinition('conversation_edit_count'))
             {
                 $table->renameColumn('conversation_edit_count', 'edit_count');
             }
+        };
 
+        return $alters;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAlters()
+    {
+        $alters = [];
+
+        $alters['xf_conversation_message'] = function (Alter $table) {
+            $this->addOrChangeColumn($table, 'last_edit_date', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
+        };
+
+        $alters['xf_conversation_master'] = function (Alter $table) {
             $this->addOrChangeColumn($table, 'last_edit_date', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'last_edit_user_id', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'edit_count', 'int')->setDefault(0);
@@ -159,7 +160,6 @@ class Setup extends AbstractSetup
 
         $alters['xf_conversation_message'] = function (Alter $table) {
             $table->dropColumns([
-                '_likes', '_like_users',
                 'last_edit_date',
                 'last_edit_user_id',
                 'edit_count'
@@ -185,7 +185,7 @@ class Setup extends AbstractSetup
     {
         $applied = false;
 
-        if (!$previousVersion)
+        if (!$previousVersion || $previousVersion < 1020003)
         {
             $this->applyGlobalPermission(
                 'conversation',
