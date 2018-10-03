@@ -41,14 +41,16 @@ class Conversation extends AbstractData
     }
 
     /**
-     * @param \XF\Entity\ConversationMaster $entity
+     * @param \SV\ConversationImprovements\XF\Entity\ConversationMaster|\XF\Entity\ConversationMaster $conversation
      * @return array
      */
-    protected function getMetadata(\XF\Entity\ConversationMaster $entity)
+    protected function getMetadata(\XF\Entity\ConversationMaster $conversation)
     {
+        $recipients = \array_keys($conversation->recipients);
+        $recipients[] = $conversation->user_id;
         return [
-            'conversation' => $entity->conversation_id,
-            'recipients'   => array_keys($entity->recipients)
+            'conversation' => $conversation->conversation_id,
+            'recipients'   => \array_unique($recipients),
         ];
     }
 

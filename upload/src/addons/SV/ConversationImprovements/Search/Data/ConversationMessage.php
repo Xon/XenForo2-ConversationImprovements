@@ -56,9 +56,11 @@ class ConversationMessage extends AbstractData
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMaster $conversation */
         $conversation = $entity->Conversation;
+        $recipients = \array_keys($conversation->recipients);
+        $recipients[] = $conversation->user_id;
         return [
             'conversation' => $entity->conversation_id,
-            'recipients'   => array_keys($conversation->recipients)
+            'recipients'   => \array_unique($recipients),
         ];
     }
 
