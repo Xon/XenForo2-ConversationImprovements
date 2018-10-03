@@ -227,11 +227,12 @@ class ConversationMessage extends AbstractData
     }
 
     /**
+     * @param string|mixed $order
      * @return \XF\Search\Query\SqlOrder|null
      */
     public function getTypeOrder($order)
     {
-        if ($order == 'replies') {
+        if ($order === 'replies') {
             return new \XF\Search\Query\SqlOrder(
                 'conversation.reply_count DESC',
                 $this->getConversationQueryTableReference()

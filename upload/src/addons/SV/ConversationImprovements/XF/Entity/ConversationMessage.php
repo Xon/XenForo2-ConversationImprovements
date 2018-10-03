@@ -26,7 +26,7 @@ class ConversationMessage extends XFCP_ConversationMessage
      *
      * @return bool
      */
-    public function canViewHistory(&$error = null)
+    public function canViewHistory(/** @noinspection PhpUnusedParameterInspection */ &$error = null)
     {
         $visitor = \XF::visitor();
         if (!$visitor->user_id) {
