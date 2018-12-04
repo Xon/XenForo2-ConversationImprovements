@@ -9,9 +9,19 @@ namespace SV\ConversationImprovements\XF\Entity
 	class XFCP_ConversationMessage extends \XF\Entity\ConversationMessage {}
 }
 
+namespace SV\ConversationImprovements\XF\Like
+{
+	class XFCP_ConversationMessage extends \XF\Like\ConversationMessage {}
+}
+
 namespace SV\ConversationImprovements\XF\Pub\Controller
 {
 	class XFCP_Conversation extends \XF\Pub\Controller\Conversation {}
+}
+
+namespace SV\ConversationImprovements\XF\Reaction
+{
+	class XFCP_ConversationMessage extends \XF\Reaction\ConversationMessage {}
 }
 
 namespace SV\ConversationImprovements\XF\Service\Conversation
