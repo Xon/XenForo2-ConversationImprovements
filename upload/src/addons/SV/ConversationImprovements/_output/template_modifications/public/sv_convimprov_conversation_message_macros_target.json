@@ -1,7 +1,7 @@
 {
     "template": "conversation_message_macros",
     "description": "Adds a history target to conversation messages",
-    "execution_order": 10,
+    "execution_order": 6553,
     "enabled": true,
     "action": "str_replace",
     "find": "</footer>",

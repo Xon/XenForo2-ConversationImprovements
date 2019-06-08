@@ -1,7 +1,7 @@
 {
     "template": "conversation_view",
     "description": "Adds search constraints to the conversation view",
-    "execution_order": 10,
+    "execution_order": 6553,
     "enabled": true,
     "action": "preg_replace",
     "find": "/$/isU",

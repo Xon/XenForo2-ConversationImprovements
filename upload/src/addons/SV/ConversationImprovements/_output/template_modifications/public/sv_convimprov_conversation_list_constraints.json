@@ -1,7 +1,7 @@
 {
     "template": "conversation_list",
     "description": "Adds search constraints to the conversation list",
-    "execution_order": 10,
+    "execution_order": 6553,
     "enabled": true,
     "action": "preg_replace",
     "find": "/$/isU",

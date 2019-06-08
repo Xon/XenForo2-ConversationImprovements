@@ -1,6 +1,6 @@
 {
     "from_class": "XF\\Like\\ConversationMessage",
     "to_class": "SV\\ConversationImprovements\\XF\\Like\\ConversationMessage",
-    "execute_order": 10,
+    "execute_order": 6553,
     "active": true
 }
