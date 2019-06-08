@@ -9,7 +9,6 @@ use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
-use XF\Db\Schema\Create;
 
 /**
  * Handles installation, upgrades, and uninstallation of the add-on.
@@ -30,11 +29,17 @@ class Setup extends AbstractSetup
         $sm = $this->schemaManager();
         foreach ($this->getLegacyAlters() as $table => $schema)
         {
-            $sm->alterTable($table, $schema);
+            if ($sm->tableExists($table))
+            {
+                $sm->alterTable($table, $schema);
+            }
         }
         foreach ($this->getAlters() as $table => $schema)
         {
-            $sm->alterTable($table, $schema);
+            if ($sm->tableExists($table))
+            {
+                $sm->alterTable($table, $schema);
+            }
         }
     }
 
@@ -68,7 +73,10 @@ class Setup extends AbstractSetup
         $sm = $this->schemaManager();
         foreach ($this->getReverseAlters() as $table => $schema)
         {
-            $sm->alterTable($table, $schema);
+            if ($sm->tableExists($table))
+            {
+                $sm->alterTable($table, $schema);
+            }
         }
     }
 
