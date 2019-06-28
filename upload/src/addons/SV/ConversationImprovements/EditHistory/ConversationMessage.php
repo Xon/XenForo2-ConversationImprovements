@@ -130,7 +130,8 @@ class ConversationMessage extends AbstractHandler
      */
     public function getHtmlFormattedContent($text, Entity $content = null)
     {
-        return \XF::app()->templater()->fn('bb_code', [
+        $func = \XF::$versionId >= 2010370 ? 'func' : 'fn';
+        return \XF::app()->templater()->$func('bb_code', [
             $text,
             'conversation_message',
             $content
