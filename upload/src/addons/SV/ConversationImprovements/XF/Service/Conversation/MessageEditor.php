@@ -53,8 +53,7 @@ class MessageEditor extends XFCP_MessageEditor
 
     /**
      * @param string $message
-     * @param bool $format
-     *
+     * @param bool   $format
      * @return bool
      */
     public function setMessageContent($message, $format = true)
@@ -64,7 +63,8 @@ class MessageEditor extends XFCP_MessageEditor
 
         $result = parent::setMessageContent($message, $format);
 
-        if ($setupHistory && $result && $this->message->isChanged('message')) {
+        if ($setupHistory && $result && $this->message->isChanged('message'))
+        {
             $this->setupEditHistory($oldMessage);
         }
 
@@ -82,17 +82,20 @@ class MessageEditor extends XFCP_MessageEditor
         $message->edit_count++;
 
         $options = $this->app->options();
-        if ($options->editLogDisplay['enabled'] && $this->logEdit) {
+        if ($options->editLogDisplay['enabled'] && $this->logEdit)
+        {
             $delay = is_null($this->logDelay)
                 ? ($options->editLogDisplay['delay'] * 60)
                 : $this->logDelay;
-            if (($message->message_date + $delay) <= \XF::$time) {
+            if (($message->message_date + $delay) <= \XF::$time)
+            {
                 $message->last_edit_date = \XF::$time;
                 $message->last_edit_user_id = \XF::visitor()->user_id;
             }
         }
 
-        if ($options->editHistory['enabled'] && $this->logHistory) {
+        if ($options->editHistory['enabled'] && $this->logHistory)
+        {
             $this->oldMessage = $oldMessage;
         }
     }
@@ -102,24 +105,21 @@ class MessageEditor extends XFCP_MessageEditor
      */
     protected function _save()
     {
+        $visitor = \XF::visitor();
         $db = $this->db();
         $db->beginTransaction();
 
         $message = parent::_save();
 
-        if ($this->oldMessage) {
+        if ($this->oldMessage)
+        {
             /** @var \XF\Repository\EditHistory $repo */
             $repo = $this->repository('XF:EditHistory');
-            $repo->insertEditHistory(
-                'conversation_message',
-                $message,
-                \XF::visitor(),
-                $this->oldMessage,
-                $this->app->request()->getIp()
-            );
+            $repo->insertEditHistory('conversation_message', $message, $visitor, $this->oldMessage, $this->app->request()->getIp());
         }
 
         $db->commit();
+
         return $message;
     }
 }

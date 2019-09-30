@@ -15,21 +15,20 @@ class ConversationMessage extends AbstractData
 {
     /**
      * @param Entity $entity
-     *
      * @return IndexRecord|null
      */
     public function getIndexData(Entity $entity)
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $entity */
-        if (!$entity->Conversation) {
+        if (!$entity->Conversation)
+        {
             return null;
         }
 
         $conversation = $entity->Conversation;
-        if ($entity->isFirstMessage()) {
-            return $this->searcher->handler('conversation')->getIndexData(
-                $conversation
-            );
+        if ($entity->isFirstMessage())
+        {
+            return $this->searcher->handler('conversation')->getIndexData($conversation);
         }
 
         return IndexRecord::create('conversation_message', $entity->message_id, [
@@ -37,7 +36,7 @@ class ConversationMessage extends AbstractData
             'date'          => $entity->message_date,
             'user_id'       => $entity->user_id,
             'discussion_id' => $entity->conversation_id,
-            'metadata'      => $this->getMetadata($entity)
+            'metadata'      => $this->getMetadata($entity),
         ]);
     }
 
@@ -51,6 +50,7 @@ class ConversationMessage extends AbstractData
         $conversation = $entity->Conversation;
         $recipients = \array_keys($conversation->recipients);
         $recipients[] = $conversation->user_id;
+
         return [
             'conversation' => $entity->conversation_id,
             'recipients'   => \array_unique($recipients),
@@ -68,7 +68,6 @@ class ConversationMessage extends AbstractData
 
     /**
      * @param Entity $entity
-     *
      * @return int
      */
     public function getResultDate(Entity $entity)
@@ -80,27 +79,26 @@ class ConversationMessage extends AbstractData
     /**
      * @param Entity $entity
      * @param array  $options
-     *
      * @return array
      */
     public function getTemplateData(Entity $entity, array $options = [])
     {
         return [
             'message' => $entity,
-            'options' => $options
+            'options' => $options,
         ];
     }
 
     /**
      * @param bool $forView
-     *
      * @return array
      */
     public function getEntityWith($forView = false)
     {
         $with = ['Conversation'];
 
-        if ($forView) {
+        if ($forView)
+        {
             $with[] = 'User';
 
             $visitor = \XF::visitor();
@@ -132,13 +130,14 @@ class ConversationMessage extends AbstractData
     public function getSearchFormTab()
     {
         $visitor = \XF::visitor();
-        if (!$visitor->user_id) {
+        if (!$visitor->user_id)
+        {
             return null;
         }
 
         return [
             'title' => \XF::phrase('sv_convimprov_search_conversations'),
-            'order' => 1010
+            'order' => 1010,
         ];
     }
 
@@ -155,58 +154,54 @@ class ConversationMessage extends AbstractData
      * @param \XF\Http\Request       $request
      * @param array                  $urlConstraints
      */
-    public function applyTypeConstraintsFromInput(
-        \XF\Search\Query\Query $query,
-        \XF\Http\Request $request,
-        array &$urlConstraints
-    ) {
+    public function applyTypeConstraintsFromInput(\XF\Search\Query\Query $query, \XF\Http\Request $request, array &$urlConstraints)
+    {
         $recipients = $request->filter('c.recipients', 'str');
-        if ($recipients) {
-            $recipients = preg_split(
-                '/,\s*/',
-                $recipients,
-                -1,
-                PREG_SPLIT_NO_EMPTY
-            );
-            if ($recipients) {
+        if ($recipients)
+        {
+            $recipients = \XF\Util\Arr::stringToArray($recipients, '/,\s*/');
+            if ($recipients)
+            {
                 /** @var \XF\Repository\User $userRepo */
                 $userRepo = \XF::repository('XF:User');
-                $matchedUsers = $userRepo->getUsersByNames(
-                    $recipients,
-                    $notFound
-                );
-                if ($notFound) {
+                $matchedUsers = $userRepo->getUsersByNames($recipients, $notFound);
+                if ($notFound)
+                {
                     $query->error('recipients', \XF::phrase(
                         'following_members_not_found_x',
                         ['members' => implode(', ', $notFound)]
                     ));
-                } else {
-                    $query->withMetadata(
-                        'recipients',
-                        $matchedUsers->keys(),
-                        'all'
-                    );
+                }
+                else
+                {
+                    $query->withMetadata('recipients', $matchedUsers->keys(), 'all');
                     $urlConstraints['recipients'] = implode(', ', $recipients);
                 }
             }
         }
 
         $minReplyCount = $request->filter('c.min_reply_count', 'uint');
-        if ($minReplyCount) {
+        if ($minReplyCount)
+        {
             $query->withSql(new \XF\Search\Query\SqlConstraint(
                 'conversation.reply_count >= %s',
                 $minReplyCount,
                 $this->getConversationQueryTableReference()
             ));
-        } else {
+        }
+        else
+        {
             unset($urlConstraints['min_reply_count']);
         }
 
         $conversationId = $request->filter('c.conversation', 'uint');
-        if ($conversationId) {
+        if ($conversationId)
+        {
             $query->withMetadata('conversation', $conversationId);
             $query->inTitleOnly(false);
-        } else {
+        }
+        else
+        {
             unset($urlConstraints['conversation']);
         }
     }
@@ -225,7 +220,8 @@ class ConversationMessage extends AbstractData
      */
     public function getTypeOrder($order)
     {
-        if ($order === 'replies') {
+        if ($order === 'replies')
+        {
             return new \XF\Search\Query\SqlOrder(
                 'conversation.reply_count DESC',
                 $this->getConversationQueryTableReference()
@@ -238,21 +234,17 @@ class ConversationMessage extends AbstractData
     /**
      * @param \XF\Search\Query\Query $query
      * @param bool                   $isOnlyType
-     *
      * @return array
      */
-    public function getTypePermissionConstraints(
-        \XF\Search\Query\Query $query,
-        $isOnlyType
-    ) {
+    public function getTypePermissionConstraints(\XF\Search\Query\Query $query, $isOnlyType)
+    {
         // $isOnlyType is false when searching both conversation types
         $queryTypes = $query->getTypes();
         $types = $this->getSearchableContentTypes();
-        if ($isOnlyType || ($queryTypes && !array_diff($queryTypes, $types))) {
-            $recipientConstraint = new MetadataConstraint(
-                'recipients',
-                \XF::visitor()->user_id
-            );
+        if ($isOnlyType || ($queryTypes && !array_diff($queryTypes, $types)))
+        {
+            $recipientConstraint = new MetadataConstraint('recipients', \XF::visitor()->user_id);
+
             return [$recipientConstraint];
         }
 
@@ -261,8 +253,7 @@ class ConversationMessage extends AbstractData
 
     /**
      * @param Entity $entity
-     * @param array $resultIds
-     *
+     * @param array  $resultIds
      * @return bool
      */
     public function canIncludeInResults(Entity $entity, array $resultIds)
@@ -270,7 +261,8 @@ class ConversationMessage extends AbstractData
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $entity */
         $conversationId = $entity->conversation_id;
         $conversationKey = "conversation-{$conversationId}";
-        if (isset($resultIds[$conversationKey]) && $entity->isFirstMessage()) {
+        if (isset($resultIds[$conversationKey]) && $entity->isFirstMessage())
+        {
             return false;
         }
 

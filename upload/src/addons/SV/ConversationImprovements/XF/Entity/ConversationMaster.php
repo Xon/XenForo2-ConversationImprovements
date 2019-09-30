@@ -7,9 +7,9 @@ use XF\Mvc\Entity\Structure;
 /**
  * Extends \XF\Entity\ConversationMaster
  *
- * @property int last_edit_date
- * @property int last_edit_user_id
- * @property int edit_count
+ * @property int    last_edit_date
+ * @property int    last_edit_user_id
+ * @property int    edit_count
  * @property string title_
  */
 class ConversationMaster extends XFCP_ConversationMaster
@@ -20,7 +20,8 @@ class ConversationMaster extends XFCP_ConversationMaster
     public function canEdit()
     {
         $visitor = \XF::visitor();
-        if ($visitor->hasPermission('conversation', 'sv_manageConversation')) {
+        if ($visitor->hasPermission('conversation', 'sv_manageConversation'))
+        {
             return true;
         }
 
@@ -33,12 +34,14 @@ class ConversationMaster extends XFCP_ConversationMaster
     public function canReply()
     {
         $visitor = \XF::visitor();
-        if (!$visitor->hasPermission('conversation', 'canReply')) {
+        if (!$visitor->hasPermission('conversation', 'canReply'))
+        {
             return false;
         }
 
         $replyLimit = $visitor->hasPermission('conversation', 'replyLimit');
-        if (($replyLimit != -1) && ($this->reply_count >= $replyLimit)) {
+        if (($replyLimit != -1) && ($this->reply_count >= $replyLimit))
+        {
             return false;
         }
 
@@ -47,21 +50,23 @@ class ConversationMaster extends XFCP_ConversationMaster
 
     /**
      * @param string $error
-     *
      * @return bool
      */
-    public function canViewHistory(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewHistory(/** @noinspection PhpUnusedParameterInspection */ &$error = null)
     {
         $visitor = \XF::visitor();
-        if (!$visitor->user_id) {
+        if (!$visitor->user_id)
+        {
             return false;
         }
 
-        if (!$this->app()->options()->editHistory['enabled']) {
+        if (!$this->app()->options()->editHistory['enabled'])
+        {
             return false;
         }
 
-        if ($visitor->hasPermission('conversation', 'sv_manageConversation')) {
+        if ($visitor->hasPermission('conversation', 'sv_manageConversation'))
+        {
             return true;
         }
 
@@ -70,34 +75,23 @@ class ConversationMaster extends XFCP_ConversationMaster
 
     /**
      * @param Structure $structure
-     *
      * @return Structure
      */
     public static function getStructure(Structure $structure)
     {
         $structure = parent::getStructure($structure);
 
-        $structure->columns['last_edit_date'] = [
-            'type'    => self::UINT,
-            'default' => 0
-        ];
-        $structure->columns['last_edit_user_id'] = [
-            'type'    => self::UINT,
-            'default' => 0
-        ];
-        $structure->columns['edit_count'] = [
-            'type'    => self::UINT,
-            'default' => 0,
-            'forced'  => true
-        ];
+        $structure->columns['last_edit_date'] = ['type' => self::UINT, 'default' => 0,];
+        $structure->columns['last_edit_user_id'] = ['type' => self::UINT, 'default' => 0,];
+        $structure->columns['edit_count'] = ['type' => self::UINT, 'default' => 0, 'forced' => true,];
         $structure->behaviors['XF:Indexable'] = [
             'checkForUpdates' => [
                 'title',
                 'user_id',
                 'start_date',
                 'first_message_id',
-                'recipients'
-            ]
+                'recipients',
+            ],
         ];
         $structure->behaviors['XF:IndexableContainer'] = [
             'childContentType' => 'conversation_message',
@@ -105,7 +99,7 @@ class ConversationMaster extends XFCP_ConversationMaster
                 /** @var \XF\Entity\ConversationMaster $conversation */
                 return $conversation->message_ids;
             },
-            'checkForUpdates' => 'recipients'
+            'checkForUpdates'  => 'recipients',
         ];
 
         return $structure;

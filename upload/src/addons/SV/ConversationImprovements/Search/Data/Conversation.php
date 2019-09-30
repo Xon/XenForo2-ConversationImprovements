@@ -14,7 +14,6 @@ class Conversation extends AbstractData
 {
     /**
      * @param Entity $entity
-     *
      * @return IndexRecord
      */
     public function getIndexData(Entity $entity)
@@ -29,7 +28,7 @@ class Conversation extends AbstractData
             'date'          => $entity->start_date,
             'user_id'       => $entity->user_id,
             'discussion_id' => $entity->conversation_id,
-            'metadata'      => $this->getMetadata($entity)
+            'metadata'      => $this->getMetadata($entity),
         ]);
     }
 
@@ -41,6 +40,7 @@ class Conversation extends AbstractData
     {
         $recipients = \array_keys($conversation->recipients);
         $recipients[] = $conversation->user_id;
+
         return [
             'conversation' => $conversation->conversation_id,
             'recipients'   => \array_unique($recipients),
@@ -58,7 +58,6 @@ class Conversation extends AbstractData
 
     /**
      * @param Entity $entity
-     *
      * @return int
      */
     public function getResultDate(Entity $entity)
@@ -70,27 +69,26 @@ class Conversation extends AbstractData
     /**
      * @param Entity $entity
      * @param array  $options
-     *
      * @return array
      */
     public function getTemplateData(Entity $entity, array $options = [])
     {
         return [
             'conversation' => $entity,
-            'options'      => $options
+            'options'      => $options,
         ];
     }
 
     /**
      * @param bool $forView
-     *
      * @return array
      */
     public function getEntityWith($forView = false)
     {
         $with = ['FirstMessage'];
 
-        if ($forView) {
+        if ($forView)
+        {
             $with[] = 'Starter';
 
             $visitor = \XF::visitor();
@@ -111,7 +109,6 @@ class Conversation extends AbstractData
     /**
      * @param Entity $entity
      * @param string $error
-     *
      * @return bool
      */
     public function canUseInlineModeration(Entity $entity, &$error = null)

@@ -12,15 +12,14 @@ class Creator extends XFCP_Creator
      * @param bool   $checkPrivacy
      * @param bool   $triggerErrors
      */
-    public function setRecipients(
-        $recipients,
-        $checkPrivacy = true,
-        $triggerErrors = true
-    ) {
+    public function setRecipients($recipients, $checkPrivacy = true, $triggerErrors = true)
+    {
         $noRecipientsAllowed = $this->app->options()->sv_conversation_with_no_one;
-        if (!$recipients && $noRecipientsAllowed) {
+        if (!$recipients && $noRecipientsAllowed)
+        {
             $starter = $this->starter;
             $this->recipients = [$starter->user_id => $starter];
+
             return;
         }
 

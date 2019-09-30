@@ -196,37 +196,22 @@ class Setup extends AbstractSetup
 
         if (!$previousVersion || $previousVersion < 1020003)
         {
-            $this->applyGlobalPermission(
-                'conversation',
-                'canReply',
-                'conversation',
-                'start'
-            );
-            $this->applyGlobalPermissionInt(
-                'conversation',
-                'replyLimit',
-                -1,
-                'conversation',
-                'start'
-            );
-            $this->applyGlobalPermission(
-                'conversation',
-                'sv_manageConversation',
-                'conversation',
-                'editAnyMessage'
-            );
+            $this->applyGlobalPermission('conversation', 'canReply', 'conversation', 'start');
+            $this->applyGlobalPermissionInt('conversation', 'replyLimit', -1, 'conversation', 'start');
+            $this->applyGlobalPermission('conversation', 'sv_manageConversation', 'conversation', 'editAnyMessage');
         }
 
         return $applied;
     }
 
     use InstallerSoftRequire;
+
     /**
      * @param array $errors
      * @param array $warnings
      */
     public function checkRequirements(&$errors = [], &$warnings = [])
     {
-        $this->checkSoftRequires($errors,$warnings);
+        $this->checkSoftRequires($errors, $warnings);
     }
 }
