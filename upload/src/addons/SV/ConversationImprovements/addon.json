@@ -2,7 +2,7 @@
     "legacy_addon_id": "SV_ConvImprovements",
     "title": "Conversation Improvements",
     "description": "Enables conversation searching, message edit history, and more.",
-    "version_id": 2000900,
+    "version_id": 2010000,
     "version_string": "2.1.0",
     "dev": "Atelier Aphelion",
     "dev_url": "https://atelieraphelion.com",
