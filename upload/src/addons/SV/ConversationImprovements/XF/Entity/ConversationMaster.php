@@ -70,7 +70,7 @@ class ConversationMaster extends XFCP_ConversationMaster
             return true;
         }
 
-        return ($this->user_id == $visitor->user_id);
+        return false;
     }
 
     /**
