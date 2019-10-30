@@ -2,6 +2,8 @@
 
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 
+use SV\ConversationImprovements\Globals;
+
 /**
  * Extends \XF\Service\Conversation\Creator
  */
@@ -23,6 +25,14 @@ class Creator extends XFCP_Creator
             return;
         }
 
-        parent::setRecipients($recipients, $checkPrivacy, $triggerErrors);
+        Globals::$noRecipientsAllowed = true;
+        try
+        {
+            parent::setRecipients($recipients, $checkPrivacy, $triggerErrors);
+        }
+        finally
+        {
+            Globals::$noRecipientsAllowed = false;
+        }
     }
 }

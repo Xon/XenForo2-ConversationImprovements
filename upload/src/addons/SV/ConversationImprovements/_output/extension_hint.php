@@ -19,6 +19,11 @@ namespace SV\ConversationImprovements\XF\Reaction
 	class XFCP_ConversationMessage extends \XF\Reaction\ConversationMessage {}
 }
 
+namespace SV\ConversationImprovements\XF\Repository
+{
+	class XFCP_Conversation extends \XF\Repository\Conversation {}
+}
+
 namespace SV\ConversationImprovements\XF\Service\Conversation
 {
 	class XFCP_Creator extends \XF\Service\Conversation\Creator {}
