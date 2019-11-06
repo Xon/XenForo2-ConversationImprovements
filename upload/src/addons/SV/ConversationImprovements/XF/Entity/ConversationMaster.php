@@ -73,6 +73,19 @@ class ConversationMaster extends XFCP_ConversationMaster
         return false;
     }
 
+    protected function _postDelete()
+    {
+        parent::_postDelete();
+
+        $messageIds = $this->message_ids;
+        if ($messageIds)
+        {
+            $db = $this->db();
+            $messageIdsQuoted = $db->quote($messageIds);
+            $db->delete('xf_edit_history', 'content_id IN (' . $messageIdsQuoted . ') AND content_type = ?', 'conversation_message');
+        }
+    }
+
     /**
      * @param Structure $structure
      * @return Structure

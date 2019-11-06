@@ -77,6 +77,14 @@ class ConversationMessage extends XFCP_ConversationMessage
         return false;
     }
 
+    protected function _postDelete()
+    {
+        parent::_postDelete();
+
+        $db = $this->db();
+        $db->delete('xf_edit_history', 'content_type = ? and content_id = ?', ['conversation_message', $this->message_id]);
+    }
+
     /**
      * @param Structure $structure
      * @return Structure
