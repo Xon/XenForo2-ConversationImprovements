@@ -56,6 +56,54 @@ class Setup extends AbstractSetup
         $this->installStep1();
     }
 
+    public function upgrade2010200Step1(/** @noinspection PhpUnusedParameterInspection */ array $stepParams)
+    {
+        $stmt = $this->db()->query('
+            DELETE `editHistory`
+            FROM xf_edit_history as editHistory
+            LEFT JOIN xf_conversation_master on editHistory.content_id = xf_conversation_master.conversation_id
+            WHERE editHistory.content_type = \'conversation\' and xf_conversation_master.conversation_id is null
+            ORDER BY editHistory.edit_history_id
+            LIMIT 500 
+        ');
+        $rowsAffected = $stmt->rowsAffected();
+        if ($rowsAffected === 500)
+        {
+            // more work to be done
+            return [
+                $rowsAffected,
+                $rowsAffected,
+                []
+            ];
+        }
+
+        return null;
+    }
+
+    public function upgrade2010200Step2(/** @noinspection PhpUnusedParameterInspection */ array $stepParams)
+    {
+        $stmt = $this->db()->query('
+            DELETE `editHistory`
+            FROM xf_edit_history as editHistory
+            LEFT JOIN xf_conversation_message on editHistory.content_id = xf_conversation_message.message_id
+            WHERE editHistory.content_type = \'conversation_message\' and xf_conversation_message.message_id is null
+            ORDER BY editHistory.edit_history_id
+            LIMIT 500 
+        ');
+        $rowsAffected = $stmt->rowsAffected();
+        if ($rowsAffected === 500)
+        {
+            // more work to be done
+            return [
+                $rowsAffected,
+                $rowsAffected,
+                []
+            ];
+        }
+
+        return null;
+    }
+
     /**
      * @param int   $previousVersion
      * @param array $stateChanges
