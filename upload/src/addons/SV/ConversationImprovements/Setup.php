@@ -67,7 +67,7 @@ class Setup extends AbstractSetup
             LIMIT 500 
         ');
         $rowsAffected = $stmt->rowsAffected();
-        if ($rowsAffected === 500)
+        if ($rowsAffected >= 500)
         {
             // more work to be done
             return [
@@ -91,7 +91,7 @@ class Setup extends AbstractSetup
             LIMIT 500 
         ');
         $rowsAffected = $stmt->rowsAffected();
-        if ($rowsAffected === 500)
+        if ($rowsAffected >= 500)
         {
             // more work to be done
             return [
