@@ -68,7 +68,6 @@ class ConversationMessage extends AbstractHandler
      */
     public function getBreadcrumbs(Entity $content)
     {
-        /** @var \XF\Mvc\Router $router */
         $router = \XF::app()->router('public');
 
         $breadcrumbs[] = [
