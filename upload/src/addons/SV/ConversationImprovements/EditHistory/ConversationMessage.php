@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\ConversationImprovements\EditHistory;
 
@@ -33,7 +36,7 @@ class ConversationMessage extends AbstractHandler
 
     /**
      * @param Entity $content
-     * @return string
+     * @return \XF\Phrase
      */
     public function getContentTitle(Entity $content)
     {
@@ -103,13 +106,15 @@ class ConversationMessage extends AbstractHandler
         {
             $content->last_edit_date = 0;
         }
-        else if ($previous && ($previous->edit_user_id === $content->user_id))
+        else if ($previous->edit_user_id === $content->user_id)
         {
             $content->last_edit_date = $previous->edit_date;
             $content->last_edit_user_id = $previous->edit_user_id;
         }
 
-        return $editor->save();
+        $editor->save();
+
+        return $content;
     }
 
     /**
@@ -137,7 +142,7 @@ class ConversationMessage extends AbstractHandler
 
         return [
             'Conversation',
-            "Conversation.Users|{$visitor->user_id}",
+            'Conversation.Users|' . $visitor->user_id,
         ];
     }
 }

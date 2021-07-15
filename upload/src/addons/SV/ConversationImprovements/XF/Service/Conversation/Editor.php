@@ -1,4 +1,8 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ * @noinspection PhpMissingParamTypeInspection
+ */
 
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 

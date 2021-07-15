@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\ConversationImprovements\XF\Entity;
 
@@ -15,10 +18,11 @@ use XF\Mvc\Entity\Structure;
 class ConversationMessage extends XFCP_ConversationMessage
 {
     /**
-     * @param string $error
+     * @param \XF\Phrase|string|null $error
      * @return bool
+     * @noinspection PhpUnusedParameterInspection
      */
-    public function canViewHistory(/** @noinspection PhpUnusedParameterInspection */ &$error = null)
+    public function canViewHistory(&$error = null)
     {
         $visitor = \XF::visitor();
         if (!$visitor->user_id)

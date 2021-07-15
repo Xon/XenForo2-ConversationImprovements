@@ -111,10 +111,7 @@ class Setup extends AbstractSetup
         );
     }
 
-    /**
-     * @return array
-     */
-    protected function getLegacyAlters()
+    protected function getLegacyAlters(): array
     {
         // addOrChangeColumn behaves poorly with renameColumn :(
 
@@ -156,10 +153,7 @@ class Setup extends AbstractSetup
         return $alters;
     }
 
-    /**
-     * @return array
-     */
-    protected function getAlters()
+    protected function getAlters(): array
     {
         $alters = [];
 
@@ -178,10 +172,7 @@ class Setup extends AbstractSetup
         return $alters;
     }
 
-    /**
-     * @return array
-     */
-    protected function getReverseAlters()
+    protected function getReverseAlters(): array
     {
         $alters = [];
 
@@ -204,11 +195,7 @@ class Setup extends AbstractSetup
         return $alters;
     }
 
-    /**
-     * @param int|null $previousVersion
-     * @return bool
-     */
-    protected function applyDefaultPermissions($previousVersion = null)
+    protected function applyDefaultPermissions(int $previousVersion = null): bool
     {
         $applied = false;
 

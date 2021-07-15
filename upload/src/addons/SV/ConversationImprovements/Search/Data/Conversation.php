@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\ConversationImprovements\Search\Data;
 
@@ -92,7 +95,7 @@ class Conversation extends AbstractData
             $with[] = 'Starter';
 
             $visitor = \XF::visitor();
-            $with[] = "Users|{$visitor->user_id}";
+            $with[] = 'Users|' . $visitor->user_id;
         }
 
         return $with;
@@ -108,7 +111,7 @@ class Conversation extends AbstractData
 
     /**
      * @param Entity $entity
-     * @param string $error
+     * @param \XF\Phrase|string|null $error
      * @return bool
      */
     public function canUseInlineModeration(Entity $entity, &$error = null)

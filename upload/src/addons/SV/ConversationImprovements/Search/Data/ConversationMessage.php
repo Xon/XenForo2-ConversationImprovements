@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\ConversationImprovements\Search\Data;
 
@@ -102,7 +105,7 @@ class ConversationMessage extends AbstractData
             $with[] = 'User';
 
             $visitor = \XF::visitor();
-            $with[] = "Conversation.Users|{$visitor->user_id}";
+            $with[] = 'Conversation.Users|' . $visitor->user_id;
         }
 
         return $with;
@@ -264,7 +267,7 @@ class ConversationMessage extends AbstractData
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $entity */
         $conversationId = $entity->conversation_id;
-        $conversationKey = "conversation-{$conversationId}";
+        $conversationKey = 'conversation-'.$conversationId;
         if (isset($resultIds[$conversationKey]) && $entity->isFirstMessage())
         {
             return false;

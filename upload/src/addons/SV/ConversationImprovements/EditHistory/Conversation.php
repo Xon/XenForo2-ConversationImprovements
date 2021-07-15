@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\ConversationImprovements\EditHistory;
 
@@ -33,7 +36,7 @@ class Conversation extends AbstractHandler
 
     /**
      * @param Entity $content
-     * @return string
+     * @return \XF\Phrase
      */
     public function getContentTitle(Entity $content)
     {
@@ -85,7 +88,7 @@ class Conversation extends AbstractHandler
      * @param Entity      $content
      * @param EditHistory $history
      * @param EditHistory $previous
-     * @return \XF\Entity\ConversationMessage
+     * @return \XF\Entity\ConversationMaster
      */
     public function revertToVersion(Entity $content, EditHistory $history, EditHistory $previous = null)
     {
@@ -100,13 +103,15 @@ class Conversation extends AbstractHandler
         {
             $content->last_edit_date = 0;
         }
-        else if ($previous && ($previous->edit_user_id === $content->user_id))
+        else if ($previous->edit_user_id === $content->user_id)
         {
             $content->last_edit_date = $previous->edit_date;
             $content->last_edit_user_id = $previous->edit_user_id;
         }
 
-        return $editor->save();
+        $editor->save();
+
+        return $content;
     }
 
     /**
@@ -127,7 +132,7 @@ class Conversation extends AbstractHandler
         $visitor = \XF::visitor();
 
         return [
-            "Users|{$visitor->user_id}",
+            'Users|' . $visitor->user_id,
         ];
     }
 }
