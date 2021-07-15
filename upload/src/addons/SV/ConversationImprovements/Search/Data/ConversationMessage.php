@@ -169,13 +169,13 @@ class ConversationMessage extends AbstractData
                 {
                     $query->error('recipients', \XF::phrase(
                         'following_members_not_found_x',
-                        ['members' => implode(', ', $notFound)]
+                        ['members' => \implode(', ', $notFound)]
                     ));
                 }
                 else
                 {
                     $query->withMetadata('recipients', $matchedUsers->keys(), 'all');
-                    $urlConstraints['recipients'] = implode(', ', $recipients);
+                    $urlConstraints['recipients'] = \implode(', ', $recipients);
                 }
             }
         }
@@ -198,7 +198,7 @@ class ConversationMessage extends AbstractData
         if ($conversationId)
         {
             $query->withMetadata('conversation', $conversationId);
-            if (\XF::$versionId < 2020000 || is_callable([$query, 'inTitleOnly']))
+            if (\XF::$versionId < 2020000 || \is_callable([$query, 'inTitleOnly']))
             {
                 /** @noinspection PhpPossiblePolymorphicInvocationInspection */
                 $query->inTitleOnly(false);
@@ -245,7 +245,7 @@ class ConversationMessage extends AbstractData
         // $isOnlyType is false when searching both conversation types
         $queryTypes = $query->getTypes();
         $types = $this->getSearchableContentTypes();
-        if ($isOnlyType || ($queryTypes && !array_diff($queryTypes, $types)))
+        if ($isOnlyType || ($queryTypes && !\array_diff($queryTypes, $types)))
         {
             $recipientConstraint = new MetadataConstraint('recipients', \XF::visitor()->user_id);
 

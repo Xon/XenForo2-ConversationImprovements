@@ -83,7 +83,7 @@ class Editor extends XFCP_Editor
         $options = $this->app->options();
         if ($options->editLogDisplay['enabled'] && $this->logEdit)
         {
-            $delay = is_null($this->logDelay)
+            $delay = $this->logDelay === null
                 ? ($options->editLogDisplay['delay'] * 60)
                 : $this->logDelay;
             if (($conversation->start_date + $delay) <= \XF::$time)
