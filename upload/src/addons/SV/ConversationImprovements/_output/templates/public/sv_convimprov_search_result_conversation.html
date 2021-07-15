@@ -13,7 +13,7 @@
 
 			<div class="contentRow-minor contentRow-minor--hideLinks">
 				<ul class="listInline listInline--bullet">
-					<xf:if is="$options.mod == 'conversation'">
+					<xf:if is="$options.mod === 'conversation'">
 						<li><xf:checkbox standalone="true">
 							<xf:option value="{$conversation.conversation_id}" class="js-inlineModToggle" />
 						</xf:checkbox></li>
@@ -21,7 +21,7 @@
 					<li>
 						<ul class="listInline listInline--comma listInline--selfInline">
 							<li><xf:username user="{$conversation.Starter}" defaultname="{$conversation.username}" title="{{ phrase('conversation_starter')|for_attr }}" /></li><xf:trim>
-							</xf:trim><xf:foreach loop="$conversation.recipients" value="$recipient" if="{$recipient.user_id} != {$conversation.user_id}"><xf:trim>
+							</xf:trim><xf:foreach loop="$conversation.recipients" value="$recipient" if="$recipient.user_id !== $conversation.user_id"><xf:trim>
 								<li><xf:username user="{$recipient}" defaultname="{{ phrase('unknown_member') }}" /></li>
 							</xf:trim></xf:foreach>
 						</ul>

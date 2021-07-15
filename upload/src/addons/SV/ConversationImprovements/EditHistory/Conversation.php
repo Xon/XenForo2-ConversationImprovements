@@ -96,11 +96,11 @@ class Conversation extends AbstractHandler
         $editor->logEdit(false);
         $editor->setTitle($history->old_text);
 
-        if (!$previous || ($previous->edit_user_id != $content->user_id))
+        if (!$previous || ($previous->edit_user_id !== $content->user_id))
         {
             $content->last_edit_date = 0;
         }
-        else if ($previous && ($previous->edit_user_id == $content->user_id))
+        else if ($previous && ($previous->edit_user_id === $content->user_id))
         {
             $content->last_edit_date = $previous->edit_date;
             $content->last_edit_user_id = $previous->edit_user_id;

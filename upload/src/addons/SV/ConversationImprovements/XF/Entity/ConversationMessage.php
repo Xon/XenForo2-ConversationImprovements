@@ -55,7 +55,7 @@ class ConversationMessage extends XFCP_ConversationMessage
             return false;
         }
 
-        if ($this->message_id == $conversation->first_message_id)
+        if ($this->message_id === $conversation->first_message_id)
         {
             return true;
         }
@@ -68,7 +68,7 @@ class ConversationMessage extends XFCP_ConversationMessage
 
         if (
             !$conversation->first_message_id
-            && ($this->message_date == $conversation->start_date)
+            && ($this->message_date === $conversation->start_date)
         )
         {
             return true;
