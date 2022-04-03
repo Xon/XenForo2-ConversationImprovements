@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Entity\\ConversationRecipient",
+    "to_class": "SV\\ConversationImprovements\\XF\\Entity\\ConversationRecipient",
+    "execute_order": 6553,
+    "active": true
+}

@@ -7,6 +7,7 @@ namespace SV\ConversationImprovements\XF\Entity
 {
 	class XFCP_ConversationMaster extends \XF\Entity\ConversationMaster {}
 	class XFCP_ConversationMessage extends \XF\Entity\ConversationMessage {}
+	class XFCP_ConversationRecipient extends \XF\Entity\ConversationRecipient {}
 }
 
 namespace SV\ConversationImprovements\XF\Pub\Controller

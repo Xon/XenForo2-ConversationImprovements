@@ -74,6 +74,11 @@ class Setup extends AbstractSetup
         ');
     }
 
+    public function upgrade2030000Step1()
+    {
+        \XF::logError('Recommend rebuilding conversation messages search index', true);
+    }
+
     /**
      * @param int   $previousVersion
      * @param array $stateChanges
