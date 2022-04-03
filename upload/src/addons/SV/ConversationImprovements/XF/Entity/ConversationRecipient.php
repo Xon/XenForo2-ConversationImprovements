@@ -6,6 +6,8 @@ use XF\Behavior\IndexableContainer;
 
 /**
  * Extends \XF\Entity\ConversationRecipient
+ *
+ * @property-read ConversationMaster $Conversation
  */
 class ConversationRecipient extends XFCP_ConversationRecipient
 {
@@ -46,6 +48,7 @@ class ConversationRecipient extends XFCP_ConversationRecipient
         {
             return;
         }
+        $conversation->clearIndexableRecipientsCache();
         $indexableContainer->triggerReindex();
     }
 }
