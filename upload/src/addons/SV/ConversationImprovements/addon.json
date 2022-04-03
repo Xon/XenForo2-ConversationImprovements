@@ -2,17 +2,17 @@
     "legacy_addon_id": "SV_ConvImprovements",
     "title": "Conversation Improvements",
     "description": "Enables conversation searching, message edit history, and more.",
-    "version_id": 2020200,
-    "version_string": "2.2.2",
+    "version_id": 2030000,
+    "version_string": "2.3.0",
     "dev": "Atelier Aphelion",
     "dev_url": "https://atelieraphelion.com",
     "faq_url": "",
     "support_url": "https://xenforo.com/community/resources/conversation-improvements-by-xon.6553/",
     "extra_urls": [],
     "require": {
-        "XF": [2010070, "XenForo 2.1.0+"],
+        "XF": [2020070, "XenForo 2.2.0+"],
         "php": ["7.0.0", "PHP 7.0.0+"],
-        "SV/StandardLib": [1000000,"Standard Library by Xon v1.0.0+"]
+        "SV/StandardLib": [1010000,"Standard Library by Xon v1.1.0+"]
     },
     "icon": "fa-comments"
 }

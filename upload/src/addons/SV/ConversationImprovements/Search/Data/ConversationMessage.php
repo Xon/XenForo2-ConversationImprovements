@@ -201,9 +201,8 @@ class ConversationMessage extends AbstractData
         if ($conversationId)
         {
             $query->withMetadata('conversation', $conversationId);
-            if (\XF::$versionId < 2020000 || \is_callable([$query, 'inTitleOnly']))
+            if (\is_callable([$query, 'inTitleOnly']))
             {
-                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
                 $query->inTitleOnly(false);
             }
         }
