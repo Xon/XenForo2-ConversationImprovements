@@ -49,14 +49,12 @@ class ConversationMessage extends AbstractData
      */
     protected function getMetadata(\XF\Entity\ConversationMessage $entity)
     {
-        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMaster $conversation */
+        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $entity */
         $conversation = $entity->Conversation;
-        $recipients = \array_keys($conversation->recipients);
-        $recipients[] = $conversation->user_id;
 
         return [
             'conversation' => $entity->conversation_id,
-            'recipients'   => \array_unique($recipients),
+            'recipients'   => $conversation ? $conversation->getIndexableRecipients() : [],
         ];
     }
 

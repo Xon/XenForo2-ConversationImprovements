@@ -14,6 +14,8 @@ use XF\Mvc\Entity\Structure;
  * @property int    last_edit_user_id
  * @property int    edit_count
  * @property string title_
+ *
+ * @property-read ConversationMessage $FirstMessage
  */
 class ConversationMaster extends XFCP_ConversationMaster
 {
@@ -75,6 +77,18 @@ class ConversationMaster extends XFCP_ConversationMaster
         }
 
         return false;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getIndexableRecipients(): array
+    {
+        return $this->db()->fetchAllColumn('
+            SELECT user_id
+            FROM xf_conversation_recipient
+            WHERE conversation_id = ?  AND recipient_state = ?
+        ', [$this->conversation_id, 'active']);
     }
 
     protected function _postDelete()
