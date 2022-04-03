@@ -103,7 +103,7 @@ class Conversation extends AbstractHandler
         {
             $content->last_edit_date = 0;
         }
-        else if ($previous->edit_user_id === $content->user_id)
+        else
         {
             $content->last_edit_date = $previous->edit_date;
             $content->last_edit_user_id = $previous->edit_user_id;
