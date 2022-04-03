@@ -80,7 +80,20 @@ class Setup extends AbstractSetup
      */
     public function postUpgrade($previousVersion, array &$stateChanges)
     {
-        $this->applyDefaultPermissions($previousVersion);
+        $atomicJobs = [];
+
+        if ($this->applyDefaultPermissions($previousVersion))
+        {
+            $atomicJobs[] = 'XF:PermissionRebuild';
+        }
+
+        if ($atomicJobs)
+        {
+            \XF::app()->jobManager()->enqueueUnique(
+                'conversation-improvements-installer',
+                'XF:Atomic', ['execute' => $atomicJobs]
+            );
+        }
     }
 
     /**
@@ -204,6 +217,7 @@ class Setup extends AbstractSetup
             $this->applyGlobalPermission('conversation', 'canReply', 'conversation', 'start');
             $this->applyGlobalPermissionInt('conversation', 'replyLimit', -1, 'conversation', 'start');
             $this->applyGlobalPermission('conversation', 'sv_manageConversation', 'conversation', 'editAnyMessage');
+            $applied = true;
         }
 
         return $applied;
