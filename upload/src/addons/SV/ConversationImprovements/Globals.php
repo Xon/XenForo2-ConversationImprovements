@@ -7,10 +7,12 @@ namespace SV\ConversationImprovements;
  *
  * @package SV\ConversationImprovements
  */
-class Globals
+abstract class Globals
 {
     /**
      * @var bool
      */
     public static $noRecipientsAllowed = false;
+
+    private function __construct() { }
 }
