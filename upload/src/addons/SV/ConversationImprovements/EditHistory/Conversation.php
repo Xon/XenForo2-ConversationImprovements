@@ -84,12 +84,12 @@ class Conversation extends AbstractHandler
 
     /**
      * @param string      $text
-     * @param Entity $content
+     * @param Entity|null $content
      * @return string
      */
     public function getHtmlFormattedContent($text, Entity $content = null): string
     {
-        return $text;
+        return \XF::escapeString($text);
     }
 
     public function getEntityWith(): array
