@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\ConversationImprovements\EditHistory;
 
@@ -14,31 +11,19 @@ use XF\Mvc\Entity\Entity;
  */
 class ConversationMessage extends AbstractHandler
 {
-    /**
-     * @param Entity $content
-     * @return bool
-     */
-    public function canViewHistory(Entity $content)
+    public function canViewHistory(Entity $content): bool
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $content */
-        return ($content->canView() && $content->canViewHistory());
+        return $content->canView() && $content->canViewHistory();
     }
 
-    /**
-     * @param Entity $content
-     * @return bool
-     */
-    public function canRevertContent(Entity $content)
+    public function canRevertContent(Entity $content): bool
     {
         /** @var \XF\Entity\ConversationMessage $content */
         return $content->canEdit();
     }
 
-    /**
-     * @param Entity $content
-     * @return \XF\Phrase
-     */
-    public function getContentTitle(Entity $content)
+    public function getContentTitle(Entity $content): \XF\Phrase
     {
         /** @var \XF\Entity\ConversationMessage $content */
         return \XF::phrase('conversation_message_in_x', [
@@ -46,30 +31,18 @@ class ConversationMessage extends AbstractHandler
         ]);
     }
 
-    /**
-     * @param Entity $content
-     * @return string
-     */
-    public function getContentText(Entity $content)
+    public function getContentText(Entity $content): string
     {
         /** @var \XF\Entity\ConversationMessage $content */
         return $content->message;
     }
 
-    /**
-     * @param Entity $content
-     * @return string
-     */
-    public function getContentLink(Entity $content)
+    public function getContentLink(Entity $content): string
     {
         return \XF::app()->router('public')->buildLink('conversations/messages', $content);
     }
 
-    /**
-     * @param Entity $content
-     * @return array
-     */
-    public function getBreadcrumbs(Entity $content)
+    public function getBreadcrumbs(Entity $content): array
     {
         $router = \XF::app()->router('public');
 
@@ -87,13 +60,7 @@ class ConversationMessage extends AbstractHandler
         return $breadcrumbs;
     }
 
-    /**
-     * @param Entity      $content
-     * @param EditHistory $history
-     * @param EditHistory $previous
-     * @return \XF\Entity\ConversationMessage
-     */
-    public function revertToVersion(Entity $content, EditHistory $history, EditHistory $previous = null)
+    public function revertToVersion(Entity $content, EditHistory $history, EditHistory $previous = null): \XF\Entity\ConversationMessage
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $content */
         /** @var \SV\ConversationImprovements\XF\Service\Conversation\MessageEditor $editor */
@@ -102,11 +69,11 @@ class ConversationMessage extends AbstractHandler
         $editor->logEdit(false);
         $editor->setMessageContent($history->old_text);
 
-        if (!$previous || ($previous->edit_user_id !== $content->user_id))
+        if ($previous === null || ($previous->edit_user_id !== $content->user_id))
         {
             $content->last_edit_date = 0;
         }
-        else if ($previous->edit_user_id === $content->user_id)
+        else
         {
             $content->last_edit_date = $previous->edit_date;
             $content->last_edit_user_id = $previous->edit_user_id;
@@ -118,14 +85,12 @@ class ConversationMessage extends AbstractHandler
     }
 
     /**
-     * @param string $text
-     * @param Entity $content
+     * @param string      $text
+     * @param Entity|null $content
      * @return string
      */
-    public function getHtmlFormattedContent($text, Entity $content = null)
+    public function getHtmlFormattedContent($text, Entity $content = null): string
     {
-        $func = \XF::$versionId >= 2010370 ? 'func' : 'fn';
-
         return \XF::app()->templater()->func('bb_code', [
             $text,
             'conversation_message',
@@ -133,10 +98,7 @@ class ConversationMessage extends AbstractHandler
         ]);
     }
 
-    /**
-     * @return array
-     */
-    public function getEntityWith()
+    public function getEntityWith(): array
     {
         $visitor = \XF::visitor();
 

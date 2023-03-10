@@ -50,10 +50,7 @@ class ConversationMessage extends XFCP_ConversationMessage
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function isFirstMessage()
+    public function isFirstMessage(): bool
     {
         $conversation = $this->Conversation;
         if (!$conversation)

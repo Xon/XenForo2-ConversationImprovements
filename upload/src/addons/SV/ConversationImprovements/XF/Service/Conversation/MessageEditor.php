@@ -1,8 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- * @noinspection PhpMissingParamTypeInspection
- */
 
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 
@@ -12,12 +8,12 @@ namespace SV\ConversationImprovements\XF\Service\Conversation;
 class MessageEditor extends XFCP_MessageEditor
 {
     /**
-     * @var string
+     * @var ?string
      */
     protected $oldMessage;
 
     /**
-     * @var int
+     * @var ?int
      */
     protected $logDelay;
 
@@ -31,26 +27,17 @@ class MessageEditor extends XFCP_MessageEditor
      */
     protected $logHistory = true;
 
-    /**
-     * @param int $logDelay
-     */
-    public function logDelay($logDelay)
+    public function logDelay(?int $logDelay): void
     {
         $this->logDelay = $logDelay;
     }
 
-    /**
-     * @param bool $logEdit
-     */
-    public function logEdit($logEdit)
+    public function logEdit(bool $logEdit): void
     {
         $this->logEdit = $logEdit;
     }
 
-    /**
-     * @param bool $logHistory
-     */
-    public function logHistory($logHistory)
+    public function logHistory(bool $logHistory): void
     {
         $this->logHistory = $logHistory;
     }
@@ -59,6 +46,7 @@ class MessageEditor extends XFCP_MessageEditor
      * @param string $message
      * @param bool   $format
      * @return bool
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function setMessageContent($message, $format = true)
     {
@@ -75,10 +63,7 @@ class MessageEditor extends XFCP_MessageEditor
         return $result;
     }
 
-    /**
-     * @param string $oldMessage
-     */
-    protected function setupEditHistory($oldMessage)
+    protected function setupEditHistory(string $oldMessage): void
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $message */
         $message = $this->message;
@@ -88,9 +73,7 @@ class MessageEditor extends XFCP_MessageEditor
         $options = $this->app->options();
         if ($options->editLogDisplay['enabled'] && $this->logEdit)
         {
-            $delay = $this->logDelay === null
-                ? ($options->editLogDisplay['delay'] * 60)
-                : $this->logDelay;
+            $delay = $this->logDelay ?? ($options->editLogDisplay['delay'] * 60);
             if (($message->message_date + $delay) <= \XF::$time)
             {
                 $message->last_edit_date = \XF::$time;
@@ -106,6 +89,7 @@ class MessageEditor extends XFCP_MessageEditor
 
     /**
      * @return \XF\Entity\ConversationMessage
+     * @noinspection PhpMissingReturnTypeInspection
      */
     protected function _save()
     {

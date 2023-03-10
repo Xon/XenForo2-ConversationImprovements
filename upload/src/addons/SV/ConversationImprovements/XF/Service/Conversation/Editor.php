@@ -1,8 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- * @noinspection PhpMissingParamTypeInspection
- */
 
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 
@@ -12,12 +8,12 @@ namespace SV\ConversationImprovements\XF\Service\Conversation;
 class Editor extends XFCP_Editor
 {
     /**
-     * @var string
+     * @var ?string
      */
     protected $oldTitle;
 
     /**
-     * @var int
+     * @var ?int
      */
     protected $logDelay;
 
@@ -31,32 +27,24 @@ class Editor extends XFCP_Editor
      */
     protected $logHistory = true;
 
-    /**
-     * @param int $logDelay
-     */
-    public function logDelay($logDelay)
+    public function logDelay(?int $logDelay): void
     {
         $this->logDelay = $logDelay;
     }
 
-    /**
-     * @param bool $logEdit
-     */
-    public function logEdit($logEdit)
+    public function logEdit(bool $logEdit): void
     {
         $this->logEdit = $logEdit;
     }
 
-    /**
-     * @param bool $logHistory
-     */
-    public function logHistory($logHistory)
+    public function logHistory(bool $logHistory): void
     {
         $this->logHistory = $logHistory;
     }
 
     /**
      * @param string $title
+     * @return void
      */
     public function setTitle($title)
     {
@@ -74,10 +62,7 @@ class Editor extends XFCP_Editor
         }
     }
 
-    /**
-     * @param string $oldTitle
-     */
-    protected function setupEditHistory($oldTitle)
+    protected function setupEditHistory(string $oldTitle): void
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMaster $conversation */
         $conversation = $this->conversation;
@@ -87,9 +72,7 @@ class Editor extends XFCP_Editor
         $options = $this->app->options();
         if ($options->editLogDisplay['enabled'] && $this->logEdit)
         {
-            $delay = $this->logDelay === null
-                ? ($options->editLogDisplay['delay'] * 60)
-                : $this->logDelay;
+            $delay = $this->logDelay ?? ($options->editLogDisplay['delay'] * 60);
             if (($conversation->start_date + $delay) <= \XF::$time)
             {
                 $conversation->last_edit_date = \XF::$time;
@@ -105,6 +88,7 @@ class Editor extends XFCP_Editor
 
     /**
      * @return \XF\Entity\ConversationMaster
+     * @noinspection PhpMissingReturnTypeInspection
      */
     protected function _save()
     {

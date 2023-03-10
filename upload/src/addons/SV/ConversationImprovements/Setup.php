@@ -22,7 +22,7 @@ class Setup extends AbstractSetup
     /**
      * Alters core tables.
      */
-    public function installStep1()
+    public function installStep1(): void
     {
         $sm = $this->schemaManager();
         foreach ($this->getLegacyAlters() as $table => $schema)
@@ -32,6 +32,11 @@ class Setup extends AbstractSetup
                 $sm->alterTable($table, $schema);
             }
         }
+    }
+
+    public function installStep2(): void
+    {
+        $sm = $this->schemaManager();
         foreach ($this->getAlters() as $table => $schema)
         {
             if ($sm->tableExists($table))
@@ -44,17 +49,17 @@ class Setup extends AbstractSetup
     /**
      * Applies default permissions for a fresh install.
      */
-    public function installStep2()
+    public function installStep3(): void
     {
         $this->applyDefaultPermissions();
     }
 
-    public function upgrade2000300Step1()
+    public function upgrade2000300Step1(): void
     {
         $this->installStep1();
     }
 
-    public function upgrade2010200Step1()
+    public function upgrade2010200Step1(): void
     {
         $this->db()->query('
             DELETE `editHistory`
@@ -64,7 +69,7 @@ class Setup extends AbstractSetup
         ');
     }
 
-    public function upgrade2010200Step2()
+    public function upgrade2010200Step2(): void
     {
         $this->db()->query('
             DELETE `editHistory`
@@ -74,7 +79,7 @@ class Setup extends AbstractSetup
         ');
     }
 
-    public function upgrade2030000Step1()
+    public function upgrade2030000Step1(): void
     {
         \XF::logError('Recommend rebuilding conversation messages search index', true);
     }
@@ -83,9 +88,10 @@ class Setup extends AbstractSetup
      * @param int   $previousVersion
      * @param array $stateChanges
      */
-    public function postUpgrade($previousVersion, array &$stateChanges)
+    public function postUpgrade($previousVersion, array &$stateChanges): void
     {
         $atomicJobs = [];
+        $previousVersion = (int)$previousVersion;
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
@@ -104,7 +110,7 @@ class Setup extends AbstractSetup
     /**
      * Reverses alterations to core tables.
      */
-    public function uninstallStep1()
+    public function uninstallStep1(): void
     {
         $sm = $this->schemaManager();
         foreach ($this->getReverseAlters() as $table => $schema)
@@ -119,7 +125,7 @@ class Setup extends AbstractSetup
     /**
      * Cleans up orphaned data.
      */
-    public function uninstallStep2()
+    public function uninstallStep2(): void
     {
         $db = $this->db();
         $db->delete(
@@ -213,11 +219,11 @@ class Setup extends AbstractSetup
         return $alters;
     }
 
-    protected function applyDefaultPermissions(int $previousVersion = null): bool
+    protected function applyDefaultPermissions(int $previousVersion = 0): bool
     {
         $applied = false;
 
-        if (!$previousVersion || $previousVersion < 1020003)
+        if ($previousVersion < 1020003)
         {
             $this->applyGlobalPermission('conversation', 'canReply', 'conversation', 'start');
             $this->applyGlobalPermissionInt('conversation', 'replyLimit', -1, 'conversation', 'start');
