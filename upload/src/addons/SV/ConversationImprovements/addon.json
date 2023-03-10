@@ -12,7 +12,8 @@
     "require": {
         "XF": [2020070, "XenForo 2.2.0+"],
         "php": ["7.2.0", "PHP 7.2.0+"],
-        "SV/StandardLib": [1010000,"Standard Library by Xon v1.1.0+"]
+        "SV/StandardLib": [1010000,"Standard Library by Xon v1.1.0+"],
+        "SV/SearchImprovements": [2090000, "Search Improvements 2.9.0+", true]
     },
     "icon": "fa-comments"
 }
