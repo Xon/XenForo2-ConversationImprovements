@@ -159,7 +159,7 @@ class ConversationMaster extends XFCP_ConversationMaster
                 /** @var \XF\Entity\ConversationMaster $conversation */
                 return $conversation->message_ids;
             },
-            'checkForUpdates'  => 'recipients',
+            'checkForUpdates'  => ['recipients'],
         ];
 
         return $structure;
