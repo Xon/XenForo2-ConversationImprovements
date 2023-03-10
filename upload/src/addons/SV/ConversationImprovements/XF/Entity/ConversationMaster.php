@@ -124,10 +124,12 @@ class ConversationMaster extends XFCP_ConversationMaster
     {
         parent::_postDelete();
 
+        $db = $this->db();
+        $db->delete('xf_edit_history', 'content_id IN ? AND content_type = ?', [$this->conversation_id, 'conversation']);
+
         $messageIds = $this->message_ids;
         if ($messageIds)
         {
-            $db = $this->db();
             $messageIdsQuoted = $db->quote($messageIds);
             $db->delete('xf_edit_history', 'content_id IN (' . $messageIdsQuoted . ') AND content_type = ?', 'conversation_message');
         }
