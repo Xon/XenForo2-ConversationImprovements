@@ -5,6 +5,7 @@
 
 namespace SV\ConversationImprovements\Search\Data;
 
+use SV\SearchImprovements\Search\DiscussionTrait;
 use XF\Mvc\Entity\Entity;
 use XF\Search\Data\AbstractData;
 use XF\Search\IndexRecord;
@@ -21,6 +22,8 @@ use function is_string;
  */
 class ConversationMessage extends AbstractData
 {
+    protected static $svDiscussionEntity = \XF\Entity\ConversationMaster::class;
+    use DiscussionTrait;
     /**
      * @param Entity $entity
      * @return IndexRecord|null
@@ -57,10 +60,14 @@ class ConversationMessage extends AbstractData
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $entity */
         $conversation = $entity->Conversation;
 
-        return [
-            'conversation' => $entity->conversation_id,
-            'recipients'   => $conversation ? $conversation->getIndexableRecipients() : [],
+        $metaData = [
+            'conversation' => $conversation->conversation_id,
+            'recipients'   => $conversation->getSearchableRecipients(),
         ];
+
+        $this->populateDiscussionMetaData($conversation, $metaData);
+
+        return $metaData;
     }
 
     /**
@@ -69,7 +76,8 @@ class ConversationMessage extends AbstractData
     public function setupMetadataStructure(MetadataStructure $structure)
     {
         $structure->addField('conversation', MetadataStructure::INT);
-        $structure->addField('recipients', MetadataStructure::INT);
+
+        $this->setupDiscussionMetadataStructure($structure);
     }
 
     /**
@@ -254,7 +262,7 @@ class ConversationMessage extends AbstractData
         if ($isOnlyType || ($queryTypes && !\array_diff($queryTypes, $types)))
         {
             // todo this isn't particularly efficient with MySQL backend
-            $recipientConstraint = new MetadataConstraint('recipients', \XF::visitor()->user_id);
+            $recipientConstraint = new MetadataConstraint('discussion_user', \XF::visitor()->user_id);
 
             return [$recipientConstraint];
         }

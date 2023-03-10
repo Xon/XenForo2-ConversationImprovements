@@ -5,6 +5,7 @@
 
 namespace SV\ConversationImprovements\Search\Data;
 
+use SV\SearchImprovements\Search\DiscussionTrait;
 use XF\Mvc\Entity\Entity;
 use XF\Search\Data\AbstractData;
 use XF\Search\IndexRecord;
@@ -15,6 +16,9 @@ use XF\Search\MetadataStructure;
  */
 class Conversation extends AbstractData
 {
+    protected static $svDiscussionEntity = \XF\Entity\ConversationMaster::class;
+    use DiscussionTrait;
+
     /**
      * @param Entity $entity
      * @return IndexRecord
@@ -40,10 +44,14 @@ class Conversation extends AbstractData
      */
     protected function getMetadata(\XF\Entity\ConversationMaster $conversation)
     {
-        return [
+        $metaData = [
             'conversation' => $conversation->conversation_id,
-            'recipients'   => $conversation->getIndexableRecipients(),
+            'recipients'   => $conversation->getSearchableRecipients(),
         ];
+
+        $this->populateDiscussionMetaData($conversation, $metaData);
+
+        return $metaData;
     }
 
     /**
@@ -52,7 +60,8 @@ class Conversation extends AbstractData
     public function setupMetadataStructure(MetadataStructure $structure)
     {
         $structure->addField('conversation', MetadataStructure::INT);
-        $structure->addField('recipients', MetadataStructure::INT);
+
+        $this->setupDiscussionMetadataStructure($structure);
     }
 
     /**

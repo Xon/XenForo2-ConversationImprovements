@@ -5,7 +5,11 @@
 
 namespace SV\ConversationImprovements\XF\Entity;
 
+use SV\SearchImprovements\Search\Features\ISearchableDiscussionUser;
 use XF\Mvc\Entity\Structure;
+use function array_keys;
+use function array_unique;
+use function array_values;
 
 /**
  * Extends \XF\Entity\ConversationMaster
@@ -17,7 +21,7 @@ use XF\Mvc\Entity\Structure;
  *
  * @property-read ConversationMessage $FirstMessage
  */
-class ConversationMaster extends XFCP_ConversationMaster
+class ConversationMaster extends XFCP_ConversationMaster implements ISearchableDiscussionUser
 {
     /**
      * @return bool
@@ -80,9 +84,34 @@ class ConversationMaster extends XFCP_ConversationMaster
     }
 
     /**
+     * List of all user where once a member of a conversation
+     *
+     * @return int []
+     * @noinspection PhpUnnecessaryLocalVariableInspection*/
+    public function getSearchableRecipients(): array
+    {
+        $recipients = array_keys($this->recipients);
+        $recipients[] = $this->user_id;
+        // array_values ensures the value is encoded as a json array, and not a json hash if the php array is not a list
+        $recipients = array_values(array_unique($recipients));
+
+        return $recipients;
+    }
+
+    /**
+     * @deprecated
      * @return int[]
      */
     public function getIndexableRecipients(): array
+    {
+        return $this->getDiscussionUserIds();
+    }
+
+    /**
+     * List of users who can view a conversation
+     * @return array<int>
+     */
+    public function getDiscussionUserIds(): array
     {
         $cache = $this->app()->cache();
         if ($cache)
