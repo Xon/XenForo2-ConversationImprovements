@@ -173,13 +173,9 @@ class ConversationMessage extends AbstractData
         ]);
 
         $repo = \SV\SearchImprovements\Globals::repo();
-        $repo->applyUserConstraint($query,
-            'recipients', $constraints['c.recipients'],
-            function () use (&$urlConstraints) {
-                unset($urlConstraints['recipients']);
-            }, function (string $value) use (&$urlConstraints) {
-                $urlConstraints['recipients'] = $value;
-            });
+        $repo->applyUserConstraint($query, $constraints, $urlConstraints,
+            'c.recipients', 'recipients'
+        );
 
         $minReplyCount = (int)$constraints['c.min_reply_count'];
         if ($minReplyCount !== 0)
