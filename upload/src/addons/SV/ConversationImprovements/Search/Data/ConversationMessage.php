@@ -11,11 +11,7 @@ use XF\Search\Data\AbstractData;
 use XF\Search\IndexRecord;
 use XF\Search\MetadataStructure;
 use XF\Search\Query\MetadataConstraint;
-use function assert;
-use function count;
-use function implode;
 use function is_callable;
-use function is_string;
 
 /**
  * A search handler for conversation messages.
@@ -170,32 +166,22 @@ class ConversationMessage extends AbstractData
      */
     public function applyTypeConstraintsFromInput(\XF\Search\Query\Query $query, \XF\Http\Request $request, array &$urlConstraints)
     {
-        $recipients = $request->filter('c.recipients', 'str', '');
-        assert(is_string($recipients));
-        if ($recipients !== '')
-        {
-            $recipients = \XF\Util\Arr::stringToArray($recipients, '/,\s*/');
-            if (count($recipients) !== 0)
-            {
-                /** @var \XF\Repository\User $userRepo */
-                $userRepo = \XF::repository('XF:User');
-                $matchedUsers = $userRepo->getUsersByNames($recipients, $notFound);
-                if ($notFound)
-                {
-                    $query->error('recipients', \XF::phrase(
-                        'following_members_not_found_x',
-                        ['members' => implode(', ', $notFound)]
-                    ));
-                }
-                else
-                {
-                    $query->withMetadata('recipients', $matchedUsers->keys(), 'all');
-                    $urlConstraints['recipients'] = implode(', ', $recipients);
-                }
-            }
-        }
+        $constraints = $request->filter([
+            'c.recipients' => 'str',
+            'c.min_reply_count' => 'uint',
+            'c.conversation' => 'uint',
+        ]);
 
-        $minReplyCount = (int)$request->filter('c.min_reply_count', 'uint', 0);
+        $repo = \SV\SearchImprovements\Globals::repo();
+        $repo->applyUserConstraint($query,
+            'recipients', $constraints['c.recipients'],
+            function () use (&$urlConstraints) {
+                unset($urlConstraints['recipients']);
+            }, function (string $value) use (&$urlConstraints) {
+                $urlConstraints['recipients'] = $value;
+            });
+
+        $minReplyCount = (int)$constraints['c.min_reply_count'];
         if ($minReplyCount !== 0)
         {
             $query->withSql(new \XF\Search\Query\SqlConstraint(
@@ -209,7 +195,7 @@ class ConversationMessage extends AbstractData
             unset($urlConstraints['min_reply_count']);
         }
 
-        $conversationId = (int)$request->filter('c.conversation', 'uint', 0);
+        $conversationId = (int)$constraints['c.conversation'];
         if ($conversationId !== 0)
         {
             $query->withMetadata('conversation', $conversationId);
