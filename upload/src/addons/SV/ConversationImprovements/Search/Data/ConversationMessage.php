@@ -72,6 +72,7 @@ class ConversationMessage extends AbstractData
     public function setupMetadataStructure(MetadataStructure $structure)
     {
         $structure->addField('conversation', MetadataStructure::INT);
+        $structure->addField('recipients', MetadataStructure::INT);
 
         $this->setupDiscussionMetadataStructure($structure);
     }
