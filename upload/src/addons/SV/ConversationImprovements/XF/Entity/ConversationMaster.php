@@ -154,13 +154,20 @@ class ConversationMaster extends XFCP_ConversationMaster implements ISearchableD
         parent::_postDelete();
 
         $db = $this->db();
-        $db->delete('xf_edit_history', 'content_id IN ? AND content_type = ?', [$this->conversation_id, 'conversation']);
+        $db->query('
+            DELETE 
+            FROM xf_edit_history 
+            WHERE  content_type = ? AND content_id = ?
+        ', ['conversation', $this->conversation_id]);
 
         $messageIds = $this->message_ids;
-        if ($messageIds)
+        if (count($messageIds) !== 0)
         {
-            $messageIdsQuoted = $db->quote($messageIds);
-            $db->delete('xf_edit_history', 'content_id IN (' . $messageIdsQuoted . ') AND content_type = ?', 'conversation_message');
+            $db->query('
+                DELETE 
+                FROM xf_edit_history 
+                WHERE  content_type = ? AND content_id in (' . $db->quote($messageIds) . ')
+            ', ['conversation_message']);
         }
     }
 

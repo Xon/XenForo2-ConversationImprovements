@@ -85,7 +85,11 @@ class ConversationMessage extends XFCP_ConversationMessage
         parent::_postDelete();
 
         $db = $this->db();
-        $db->delete('xf_edit_history', 'content_type = ? and content_id = ?', ['conversation_message', $this->message_id]);
+        $db->query('
+            DELETE 
+            FROM xf_edit_history 
+            WHERE  content_type = ? AND content_id = ?
+        ', ['conversation_message', $this->message_id]);
     }
 
     /**
