@@ -113,40 +113,11 @@ class ConversationMaster extends XFCP_ConversationMaster implements ISearchableD
      */
     public function getDiscussionUserIds(): array
     {
-        $cache = $this->app()->cache();
-        if ($cache)
-        {
-            $result = $cache->fetch('sv_searchable_recipients_' . $this->conversation_id);
-            if (\is_array($result))
-            {
-                return $result;
-            }
-        }
-
-        $results = $this->db()->fetchAllColumn('
+        return $this->db()->fetchAllColumn('
             SELECT user_id
             FROM xf_conversation_recipient
             WHERE conversation_id = ?  AND recipient_state = ?
         ', [$this->conversation_id, 'active']);
-
-        if ($cache)
-        {
-            $cache->save('sv_searchable_recipients_' . $this->conversation_id, $results, 60);
-        }
-
-        return $results;
-    }
-
-    /**
-     * @return void
-     */
-    public function clearIndexableRecipientsCache()
-    {
-        $cache = $this->app()->cache();
-        if ($cache)
-        {
-            $cache->delete('sv_searchable_recipients_' . $this->conversation_id);
-        }
     }
 
     protected function _postDelete()

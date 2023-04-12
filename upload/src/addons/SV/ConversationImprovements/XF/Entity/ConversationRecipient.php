@@ -48,7 +48,6 @@ class ConversationRecipient extends XFCP_ConversationRecipient
         {
             return;
         }
-        $conversation->clearIndexableRecipientsCache();
         $indexableContainer->triggerReindex();
     }
 }
