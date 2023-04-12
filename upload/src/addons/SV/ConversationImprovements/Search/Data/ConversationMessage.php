@@ -6,6 +6,9 @@
 namespace SV\ConversationImprovements\Search\Data;
 
 use SV\SearchImprovements\Search\DiscussionTrait;
+use SV\SearchImprovements\XF\Search\Query\Constraints\NotConstraint;
+use SV\SearchImprovements\XF\Search\Query\Constraints\OrConstraint;
+use SV\SearchImprovements\XF\Search\Query\Constraints\TypeConstraint;
 use XF\Mvc\Entity\Entity;
 use XF\Search\Data\AbstractData;
 use XF\Search\IndexRecord;
@@ -239,18 +242,20 @@ class ConversationMessage extends AbstractData
      */
     public function getTypePermissionConstraints(\XF\Search\Query\Query $query, $isOnlyType)
     {
-        // $isOnlyType is false when searching both conversation types
-        $queryTypes = $query->getTypes();
-        $types = $this->getSearchableContentTypes();
-        if ($isOnlyType || ($queryTypes && !\array_diff($queryTypes, $types)))
+        // Note; ElasticSearchEssentials forces all getTypePermissionConstraints to have $isOnlyType=true as it knows how to compose multiple types together
+        if ($isOnlyType)
         {
-            // todo this isn't particularly efficient with MySQL backend
-            $recipientConstraint = new MetadataConstraint('discussion_user', \XF::visitor()->user_id);
-
-            return [$recipientConstraint];
+            return [
+                new MetadataConstraint('discussion_user', \XF::visitor()->user_id)
+            ];
         }
 
-        return [];
+        return [
+            new OrConstraint(
+                new NotConstraint(new TypeConstraint(...$this->getSearchableContentTypes())),
+                new MetadataConstraint('discussion_user', \XF::visitor()->user_id)
+            )
+        ];
     }
 
     /**
