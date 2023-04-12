@@ -5,6 +5,7 @@
 
 namespace SV\ConversationImprovements\Search\Data;
 
+use SV\SearchImprovements\Globals;
 use SV\SearchImprovements\Search\DiscussionTrait;
 use SV\SearchImprovements\XF\Search\Query\Constraints\NotConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\OrConstraint;
@@ -248,6 +249,12 @@ class ConversationMessage extends AbstractData
             return [
                 new MetadataConstraint('discussion_user', \XF::visitor()->user_id)
             ];
+        }
+
+        if (!Globals::repo()->isUsingElasticSearch())
+        {
+            // Search Improvements and/or/type constraints are XFES only and don't support mysql
+            return [];
         }
 
         return [
