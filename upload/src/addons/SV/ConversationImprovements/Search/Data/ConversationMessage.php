@@ -5,6 +5,7 @@
 
 namespace SV\ConversationImprovements\Search\Data;
 
+use SV\ElasticSearchEssentials\XF\Repository\ImpossibleSearchResultsException;
 use SV\SearchImprovements\Globals;
 use SV\SearchImprovements\Search\DiscussionTrait;
 use SV\SearchImprovements\XF\Search\Query\Constraints\NotConstraint;
@@ -243,24 +244,37 @@ class ConversationMessage extends AbstractData
      */
     public function getTypePermissionConstraints(\XF\Search\Query\Query $query, $isOnlyType)
     {
+        $userId = (int)\XF::visitor()->user_id;
+        if (!Globals::repo()->isUsingElasticSearch())
+        {
+            return $isOnlyType
+                // discussion_user is only populated when XFES is enabled, this likely should change
+                ? [new MetadataConstraint('recipients', $userId)]
+                // Search Improvements and/or/type constraints are XFES only and don't support mysql
+                : [];
+        }
+
+        if ($userId === 0)
+        {
+            // guests can't view conversations
+            if (\XF::isAddOnActive('SV/ElasticSearchEssentials'))
+            {
+                throw new ImpossibleSearchResultsException();
+            }
+        }
+
         // Note; ElasticSearchEssentials forces all getTypePermissionConstraints to have $isOnlyType=true as it knows how to compose multiple types together
         if ($isOnlyType)
         {
             return [
-                new MetadataConstraint('discussion_user', \XF::visitor()->user_id)
+                new MetadataConstraint('discussion_user', $userId)
             ];
-        }
-
-        if (!Globals::repo()->isUsingElasticSearch())
-        {
-            // Search Improvements and/or/type constraints are XFES only and don't support mysql
-            return [];
         }
 
         return [
             new OrConstraint(
                 new NotConstraint(new TypeConstraint(...$this->getSearchableContentTypes())),
-                new MetadataConstraint('discussion_user', \XF::visitor()->user_id)
+                new MetadataConstraint('discussion_user', $userId)
             )
         ];
     }
