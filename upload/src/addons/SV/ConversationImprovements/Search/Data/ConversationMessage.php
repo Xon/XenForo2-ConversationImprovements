@@ -8,8 +8,10 @@ namespace SV\ConversationImprovements\Search\Data;
 use SV\ElasticSearchEssentials\XF\Repository\ImpossibleSearchResultsException;
 use SV\SearchImprovements\Globals;
 use SV\SearchImprovements\Search\DiscussionTrait;
+use SV\SearchImprovements\XF\Search\Query\Constraints\AndConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\NotConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\OrConstraint;
+use SV\SearchImprovements\XF\Search\Query\Constraints\PermissionConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\TypeConstraint;
 use XF\Mvc\Entity\Entity;
 use XF\Search\Data\AbstractData;
@@ -272,9 +274,15 @@ class ConversationMessage extends AbstractData
         }
 
         return [
-            new OrConstraint(
-                new NotConstraint(new TypeConstraint(...$this->getSearchableContentTypes())),
-                new MetadataConstraint('discussion_user', $userId)
+            // XF constraints are AND'ed together for positive queries (ANY/ALL), and OR'ed for all negative queries (NONE).
+            // PermissionConstraint forces the sub-query as a negative query instead of being part of the AND'ed positive queries
+            new PermissionConstraint(
+                new AndConstraint(
+                    new TypeConstraint(...$this->getSearchableContentTypes()),
+                    $userId === 0
+                        ? null
+                        : new MetadataConstraint('discussion_user', $userId, MetadataConstraint::MATCH_NONE)
+                )
             )
         ];
     }
