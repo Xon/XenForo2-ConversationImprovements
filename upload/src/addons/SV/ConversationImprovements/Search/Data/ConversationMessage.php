@@ -263,13 +263,18 @@ class ConversationMessage extends AbstractData
             {
                 throw new ImpossibleSearchResultsException();
             }
+
+            return [
+                new PermissionConstraint(new TypeConstraint(...$this->getSearchableContentTypes()))
+            ];
         }
 
-        // Note; ElasticSearchEssentials forces all getTypePermissionConstraints to have $isOnlyType=true as it knows how to compose multiple types together
+        $viewConstraint = new MetadataConstraint('discussion_user', $userId);
         if ($isOnlyType)
         {
+            // Note; ElasticSearchEssentials forces all getTypePermissionConstraints to have $isOnlyType=true as it knows how to compose multiple types together
             return [
-                new MetadataConstraint('discussion_user', $userId)
+                $viewConstraint
             ];
         }
 
@@ -279,9 +284,7 @@ class ConversationMessage extends AbstractData
             new PermissionConstraint(
                 new AndConstraint(
                     new TypeConstraint(...$this->getSearchableContentTypes()),
-                    $userId === 0
-                        ? null
-                        : new NotConstraint(new MetadataConstraint('discussion_user', $userId))
+                    new NotConstraint($viewConstraint)
                 )
             )
         ];
