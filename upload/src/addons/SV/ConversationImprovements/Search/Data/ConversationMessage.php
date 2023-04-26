@@ -281,7 +281,7 @@ class ConversationMessage extends AbstractData
                     new TypeConstraint(...$this->getSearchableContentTypes()),
                     $userId === 0
                         ? null
-                        : new MetadataConstraint('discussion_user', $userId, MetadataConstraint::MATCH_NONE)
+                        : new NotConstraint(new MetadataConstraint('discussion_user', $userId))
                 )
             )
         ];
