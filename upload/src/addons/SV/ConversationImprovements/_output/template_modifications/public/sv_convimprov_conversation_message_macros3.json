@@ -1,0 +1,9 @@
+{
+    "template": "conversation_message_macros",
+    "description": "Add last edit timestamp/user",
+    "execution_order": 6553,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<div class=\"js-selectToQuoteEnd\">&nbsp;</div>",
+    "replace": "$0\n<xf:macro name=\"sv_convimprov_conversation_macros::message_last_edit\" arg-message=\"{$message}\" />"
+}

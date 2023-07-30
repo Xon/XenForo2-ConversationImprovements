@@ -12,3 +12,15 @@
 		} }}" />
 	</xf:if>
 </xf:macro>
+
+<xf:macro name="message_last_edit" arg-message="!">
+	<xf:if is="$message.last_edit_date">
+		<div class="message-lastEdit">
+			<xf:if is="$message.user_id == $message.last_edit_user_id">
+				{{ phrase('last_edited:') }} <xf:date time="{$message.last_edit_date}" itemprop="dateModified" />
+			<xf:else />
+				{{ phrase('last_edited_by_moderator:') }} <xf:date time="{$message.last_edit_date}" itemprop="dateModified" />
+			</xf:if>
+		</div>
+	</xf:if>
+</xf:macro>
