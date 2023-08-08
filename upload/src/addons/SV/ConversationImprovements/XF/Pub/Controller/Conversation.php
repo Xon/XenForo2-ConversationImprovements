@@ -35,4 +35,33 @@ class Conversation extends XFCP_Conversation
             'content_id'   => $params->get('message_id'),
         ]);
     }
+
+    /**
+     * @param \XF\Entity\ConversationMessage|\SV\ConversationImprovements\XF\Entity\ConversationMessage $conversationMessage
+     *
+     * @return \XF\Service\Conversation\MessageEditor
+     */
+    protected function setupMessageEdit(\XF\Entity\ConversationMessage $conversationMessage)
+    {
+        $last_edit_date = $conversationMessage->last_edit_date;
+        $last_edit_user_id = $conversationMessage->last_edit_user_id;
+
+        $editor = parent::setupMessageEdit($conversationMessage);
+
+        if ($conversationMessage->canEditSilently())
+        {
+            $silentEdit = $this->filter('silent', 'bool');
+            if ($silentEdit)
+            {
+                $conversationMessage->last_edit_date = $last_edit_date;
+                $conversationMessage->last_edit_user_id = $last_edit_user_id;
+                if ($this->filter('clear_edit', 'bool'))
+                {
+                    $conversationMessage->last_edit_date = 0;
+                }
+            }
+        }
+
+        return $editor;
+    }
 }

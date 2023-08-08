@@ -1,0 +1,9 @@
+{
+    "template": "conversation_message_edit",
+    "description": "Add \"edit silently\" feature for conversation messages",
+    "execution_order": 6553,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#[\\s]*</div>.*?<xf:submitrow icon=\"save\"#si",
+    "replace": "\n<xf:include template=\"svConvImprov_conversation_message_edit\" />\n$0"
+}

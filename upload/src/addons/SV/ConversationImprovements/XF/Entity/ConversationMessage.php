@@ -80,6 +80,30 @@ class ConversationMessage extends XFCP_ConversationMessage
         return false;
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
+    public function canEditSilently(&$error = null): bool
+    {
+        $conversation = $this->Conversation;
+        $visitor = \XF::visitor();
+        if (!$visitor->user_id || !$conversation)
+        {
+            return false;
+        }
+
+        if (!$conversation->conversation_open)
+        {
+            $error = \XF::phraseDeferred('conversation_is_closed');
+            return false;
+        }
+
+        if ($visitor->hasPermission('conversation', 'editAnyMessage'))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     protected function _postDelete()
     {
         parent::_postDelete();
