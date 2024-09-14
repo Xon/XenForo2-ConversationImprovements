@@ -12,7 +12,7 @@ use function array_unique;
 use function array_values;
 
 /**
- * Extends \XF\Entity\ConversationMaster
+ * @extends \XF\Entity\ConversationMaster
  *
  * @property int    last_edit_date
  * @property int    last_edit_user_id

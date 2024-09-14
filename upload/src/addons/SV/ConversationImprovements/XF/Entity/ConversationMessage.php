@@ -8,7 +8,7 @@ namespace SV\ConversationImprovements\XF\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- * Extends \XF\Entity\ConversationMessage
+ * @extends \XF\Entity\ConversationMessage
  *
  * @property int    last_edit_date
  * @property int    last_edit_user_id

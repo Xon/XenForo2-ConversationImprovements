@@ -8,7 +8,7 @@ namespace SV\ConversationImprovements\XF\Repository;
 use SV\ConversationImprovements\Globals;
 
 /**
- * Extends \XF\Repository\Conversation
+ * @extends \XF\Repository\Conversation
  */
 class Conversation extends XFCP_Conversation
 {

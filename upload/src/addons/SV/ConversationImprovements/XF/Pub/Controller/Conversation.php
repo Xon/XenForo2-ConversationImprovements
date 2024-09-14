@@ -8,7 +8,7 @@ namespace SV\ConversationImprovements\XF\Pub\Controller;
 use XF\Mvc\ParameterBag;
 
 /**
- * Extends \XF\Pub\Controller\Conversation
+ * @extends \XF\Pub\Controller\Conversation
  */
 class Conversation extends XFCP_Conversation
 {

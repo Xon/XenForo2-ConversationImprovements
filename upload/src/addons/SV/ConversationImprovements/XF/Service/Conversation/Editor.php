@@ -3,7 +3,7 @@
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 
 /**
- * Extends \XF\Service\Conversation\Editor
+ * @extends \XF\Service\Conversation\Editor
  */
 class Editor extends XFCP_Editor
 {

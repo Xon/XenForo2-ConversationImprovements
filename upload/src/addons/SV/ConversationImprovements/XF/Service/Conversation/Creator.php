@@ -5,7 +5,7 @@ namespace SV\ConversationImprovements\XF\Service\Conversation;
 use SV\ConversationImprovements\Globals;
 
 /**
- * Extends \XF\Service\Conversation\Creator
+ * @extends \XF\Service\Conversation\Creator
  */
 class Creator extends XFCP_Creator
 {

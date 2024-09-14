@@ -5,7 +5,7 @@ namespace SV\ConversationImprovements\XF\Entity;
 use XF\Behavior\IndexableContainer;
 
 /**
- * Extends \XF\Entity\ConversationRecipient
+ * @extends \XF\Entity\ConversationRecipient
  *
  * @property-read ConversationMaster $Conversation
  */
