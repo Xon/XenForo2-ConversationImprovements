@@ -9,8 +9,12 @@ use XF\Mvc\Entity\Entity;
  */
 class ConversationMessage extends XFCP_ConversationMessage
 {
+    /**
+     * @noinspection PhpMissingParentCallCommonInspection
+     * @noinspection PhpMissingReturnTypeInspection
+     */
     public function reactionsCounted(Entity $entity)
     {
-        return \XF::options()->svCountConversationLikes ?? true;
+        return (bool)(\XF::options()->svCountConversationLikes ?? true);
     }
 }

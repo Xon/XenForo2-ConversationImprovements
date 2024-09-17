@@ -6,6 +6,7 @@
 namespace SV\ConversationImprovements\XF\Entity;
 
 use XF\Mvc\Entity\Structure;
+use function is_callable;
 
 /**
  * @extends \XF\Entity\ConversationMessage
@@ -52,6 +53,11 @@ class ConversationMessage extends XFCP_ConversationMessage
 
     public function isFirstMessage(): bool
     {
+        if (is_callable(parent::class.'::isFirstMessage'))
+        {
+            return parent::isFirstMessage();
+        }
+
         $conversation = $this->Conversation;
         if (!$conversation)
         {

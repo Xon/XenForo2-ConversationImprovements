@@ -1,10 +1,19 @@
 <?php
+/**
+ * @noinspection PhpMissingParentCallCommonInspection
+ */
 
 namespace SV\ConversationImprovements\EditHistory;
 
+use SV\ConversationImprovements\XF\Entity\ConversationMessage as ExtendedConversationMessageEntity;
+use SV\ConversationImprovements\XF\Service\Conversation\MessageEditor as ExtendedMessageEditorService;
+use SV\StandardLib\Helper;
 use XF\EditHistory\AbstractHandler;
+use XF\Entity\ConversationMessage as ConversationMessageEntity;
 use XF\Entity\EditHistory;
 use XF\Mvc\Entity\Entity;
+use XF\Phrase;
+use XF\Service\Conversation\MessageEditor as MessageEditorService;
 
 /**
  * An edit history handler for conversation messages.
@@ -13,27 +22,27 @@ class ConversationMessage extends AbstractHandler
 {
     public function canViewHistory(Entity $content): bool
     {
-        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $content */
+        /** @var ExtendedConversationMessageEntity $content */
         return $content->canView() && $content->canViewHistory();
     }
 
     public function canRevertContent(Entity $content): bool
     {
-        /** @var \XF\Entity\ConversationMessage $content */
+        /** @var ConversationMessageEntity $content */
         return $content->canEdit();
     }
 
-    public function getContentTitle(Entity $content): \XF\Phrase
+    public function getContentTitle(Entity $content): Phrase
     {
-        /** @var \XF\Entity\ConversationMessage $content */
-        return \XF::phrase('conversation_message_in_x', [
+        /** @var ConversationMessageEntity $content */
+        return \XF::phrase(\XF::$versionId > 2030000 ? 'direct_message_reply_in_x' : 'conversation_message_in_x', [
             'title' => $content->Conversation->title,
         ]);
     }
 
     public function getContentText(Entity $content): string
     {
-        /** @var \XF\Entity\ConversationMessage $content */
+        /** @var ConversationMessageEntity $content */
         return $content->message;
     }
 
@@ -47,11 +56,11 @@ class ConversationMessage extends AbstractHandler
         $router = \XF::app()->router('public');
 
         $breadcrumbs[] = [
-            'value' => \XF::phrase('conversations'),
+            'value' => \XF::phrase(\XF::$versionId > 2030000 ? 'direct_messages' : 'conversations'),
             'href'  => $router->buildLink('conversations'),
         ];
 
-        /** @var \XF\Entity\ConversationMessage $content */
+        /** @var ConversationMessageEntity $content */
         $breadcrumbs[] = [
             'value' => $content->Conversation->title,
             'href'  => $router->buildLink('conversations/messages', $content),
@@ -60,11 +69,11 @@ class ConversationMessage extends AbstractHandler
         return $breadcrumbs;
     }
 
-    public function revertToVersion(Entity $content, EditHistory $history, EditHistory $previous = null): \XF\Entity\ConversationMessage
+    public function revertToVersion(Entity $content, EditHistory $history, EditHistory $previous = null): ConversationMessageEntity
     {
-        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $content */
-        /** @var \SV\ConversationImprovements\XF\Service\Conversation\MessageEditor $editor */
-        $editor = \XF::app()->service('XF:Conversation\MessageEditor', $content);
+        /** @var ExtendedConversationMessageEntity $content */
+        /** @var ExtendedMessageEditorService $editor */
+        $editor = Helper::service(MessageEditorService::class, $content);
 
         $editor->logEdit(false);
         $editor->setMessageContent($history->old_text);
