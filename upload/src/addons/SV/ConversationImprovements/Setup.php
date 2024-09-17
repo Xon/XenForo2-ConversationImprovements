@@ -95,14 +95,14 @@ class Setup extends AbstractSetup
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
-            $atomicJobs[] = 'XF:PermissionRebuild';
+            $atomicJobs[] = \XF\Job\PermissionRebuild::class;
         }
 
         if ($atomicJobs)
         {
             \XF::app()->jobManager()->enqueueUnique(
                 'conversation-improvements-installer',
-                'XF:Atomic', ['execute' => $atomicJobs]
+                \XF\Job\Atomic::class, ['execute' => $atomicJobs]
             );
         }
     }
