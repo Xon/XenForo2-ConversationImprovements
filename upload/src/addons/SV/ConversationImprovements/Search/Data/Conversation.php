@@ -1,5 +1,6 @@
 <?php
 /**
+ * @noinspection PhpMissingParentCallCommonInspection
  * @noinspection PhpMissingReturnTypeInspection
  */
 
@@ -12,6 +13,7 @@ use XF\Search\IndexRecord;
 use XF\Search\MetadataStructure;
 
 /**
+ * XF2.1/XF2.2
  * A search handler for conversations.
  */
 class Conversation extends AbstractData

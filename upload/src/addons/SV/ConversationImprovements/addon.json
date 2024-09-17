@@ -26,8 +26,8 @@
             "PHP 7.2.0+"
         ],
         "SV/SearchImprovements": [
-            "2.10.0",
-            "Search Improvements 2.10.0+"
+            "2.15.0",
+            "Search Improvements 2.15.0+"
         ]
     },
     "icon": "fa-comments"

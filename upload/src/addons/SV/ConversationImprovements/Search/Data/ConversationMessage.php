@@ -1,16 +1,16 @@
 <?php
 /**
+ * @noinspection PhpMissingParentCallCommonInspection
  * @noinspection PhpMissingReturnTypeInspection
  */
 
 namespace SV\ConversationImprovements\Search\Data;
 
 use SV\ElasticSearchEssentials\XF\Repository\ImpossibleSearchResultsException;
-use SV\SearchImprovements\Globals;
+use SV\SearchImprovements\Repository\Search as SearchRepo;
 use SV\SearchImprovements\Search\DiscussionTrait;
 use SV\SearchImprovements\XF\Search\Query\Constraints\AndConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\NotConstraint;
-use SV\SearchImprovements\XF\Search\Query\Constraints\OrConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\PermissionConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\TypeConstraint;
 use XF\Mvc\Entity\Entity;
@@ -21,6 +21,7 @@ use XF\Search\Query\MetadataConstraint;
 use function is_callable;
 
 /**
+ * XF2.1/XF2.2
  * A search handler for conversation messages.
  */
 class ConversationMessage extends AbstractData
@@ -180,7 +181,7 @@ class ConversationMessage extends AbstractData
             'c.conversation' => 'uint',
         ]);
 
-        $repo = \SV\SearchImprovements\Globals::repo();
+        $repo = SearchRepo::get();
         $repo->applyUserConstraint($query, $constraints, $urlConstraints,
             'c.recipients', 'recipients'
         );
@@ -247,7 +248,8 @@ class ConversationMessage extends AbstractData
     public function getTypePermissionConstraints(\XF\Search\Query\Query $query, $isOnlyType)
     {
         $userId = (int)\XF::visitor()->user_id;
-        if (!Globals::repo()->isUsingElasticSearch())
+        $repo = SearchRepo::get();
+        if (!$repo->isUsingElasticSearch())
         {
             return $isOnlyType
                 // discussion_user is only populated when XFES is enabled, this likely should change
