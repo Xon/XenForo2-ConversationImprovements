@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Search\\Data\\ConversationMessage",
+    "to_class": "SV\\ConversationImprovements\\XF\\Search\\Data\\ConversationMessage",
+    "execute_order": 1,
+    "active": true
+}
