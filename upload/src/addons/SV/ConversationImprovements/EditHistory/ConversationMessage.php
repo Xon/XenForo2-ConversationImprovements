@@ -69,7 +69,7 @@ class ConversationMessage extends AbstractHandler
         return $breadcrumbs;
     }
 
-    public function revertToVersion(Entity $content, EditHistoryEntity $history, EditHistoryEntity $previous = null): ConversationMessageEntity
+    public function revertToVersion(Entity $content, EditHistoryEntity $history, ?EditHistoryEntity $previous = null): ConversationMessageEntity
     {
         /** @var ExtendedConversationMessageEntity $content */
         /** @var ExtendedMessageEditorService $editor */
@@ -98,7 +98,7 @@ class ConversationMessage extends AbstractHandler
      * @param Entity|null $content
      * @return string
      */
-    public function getHtmlFormattedContent($text, Entity $content = null): string
+    public function getHtmlFormattedContent($text, ?Entity $content = null): string
     {
         return \XF::app()->templater()->func('bb_code', [
             $text,

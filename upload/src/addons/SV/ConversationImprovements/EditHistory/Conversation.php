@@ -66,7 +66,7 @@ class Conversation extends AbstractHandler
         return $breadcrumbs;
     }
 
-    public function revertToVersion(Entity $content, EditHistoryEntity $history, EditHistoryEntity $previous = null): ConversationMasterEntity
+    public function revertToVersion(Entity $content, EditHistoryEntity $history, ?EditHistoryEntity $previous = null): ConversationMasterEntity
     {
         /** @var ExtendedConversationMasterEntity $content */
         /** @var ExtendedEditorService $editor */
@@ -95,7 +95,7 @@ class Conversation extends AbstractHandler
      * @param Entity|null $content
      * @return string
      */
-    public function getHtmlFormattedContent($text, Entity $content = null): string
+    public function getHtmlFormattedContent($text, ?Entity $content = null): string
     {
         return \XF::escapeString($text);
     }
