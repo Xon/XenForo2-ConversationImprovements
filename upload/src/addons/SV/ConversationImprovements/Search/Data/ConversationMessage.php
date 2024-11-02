@@ -47,9 +47,9 @@ class ConversationMessage extends AbstractData
             return null;
         }
 
-        $conversation = $entity->Conversation;
         if ($entity->isFirstMessage())
         {
+            $conversation = $entity->Conversation;
             return $this->searcher->handler('conversation')->getIndexData($conversation);
         }
 
@@ -70,10 +70,13 @@ class ConversationMessage extends AbstractData
     {
         /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $entity */
         $conversation = $entity->Conversation;
+        $recipients = $conversation->recipient_user_ids;
+        $activeRecipients = $conversation->active_recipient_user_ids;
 
         $metaData = [
-            'conversation' => $conversation->conversation_id,
-            'recipients'   => $conversation->getSearchableRecipients(),
+            'conversation' => $entity->conversation_id,
+            'recipients'   => $recipients,
+            'active_recipients' => $activeRecipients,
         ];
 
         $this->populateDiscussionMetaData($conversation, $metaData);
@@ -88,6 +91,7 @@ class ConversationMessage extends AbstractData
     {
         $structure->addField('conversation', MetadataStructure::INT);
         $structure->addField('recipients', MetadataStructure::INT);
+        $structure->addField('active_recipients', MetadataStructure::INT);
 
         $this->setupDiscussionMetadataStructure($structure);
     }
@@ -261,7 +265,7 @@ class ConversationMessage extends AbstractData
         {
             return $isOnlyType
                 // discussion_user is only populated when XFES is enabled, this likely should change
-                ? [new MetadataConstraint('recipients', $userId)]
+                ? [new MetadataConstraint('active_recipients', $userId)]
                 // Search Improvements and/or/type constraints are XFES only and don't support mysql
                 : [];
         }
@@ -279,7 +283,7 @@ class ConversationMessage extends AbstractData
             ];
         }
 
-        $viewConstraint = new MetadataConstraint('discussion_user', $userId);
+        $viewConstraint = new MetadataConstraint('active_recipients', $userId);
         if ($isOnlyType)
         {
             // Note; ElasticSearchEssentials forces all getTypePermissionConstraints to have $isOnlyType=true as it knows how to compose multiple types together

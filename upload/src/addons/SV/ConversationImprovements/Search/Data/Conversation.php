@@ -49,9 +49,13 @@ class Conversation extends AbstractData
      */
     protected function getMetadata(ConversationMasterEntity $conversation)
     {
+        $recipients = $conversation->recipient_user_ids;
+        $activeRecipients = $conversation->active_recipient_user_ids;
+
         $metaData = [
             'conversation' => $conversation->conversation_id,
-            'recipients'   => $conversation->getSearchableRecipients(),
+            'recipients'   => $recipients,
+            'active_recipients' => $activeRecipients,
         ];
 
         $this->populateDiscussionMetaData($conversation, $metaData);
@@ -66,6 +70,7 @@ class Conversation extends AbstractData
     {
         $structure->addField('conversation', MetadataStructure::INT);
         $structure->addField('recipients', MetadataStructure::INT);
+        $structure->addField('active_recipients', MetadataStructure::INT);
 
         $this->setupDiscussionMetadataStructure($structure);
     }

@@ -14,12 +14,13 @@ use function array_values;
 
 /**
  * @extends \XF\Entity\ConversationMaster
- *
  * @property int    last_edit_date
  * @property int    last_edit_user_id
  * @property int    edit_count
  * @property string title_
  *
+ * @property-read list<int> $recipient_user_ids
+ * @property-read list<int> $active_recipient_user_ids
  * @property-read ConversationMessage $FirstMessage
  */
 class ConversationMaster extends XFCP_ConversationMaster implements ISearchableDiscussionUser
@@ -85,27 +86,47 @@ class ConversationMaster extends XFCP_ConversationMaster implements ISearchableD
     }
 
     /**
-     * List of all user where once a member of a conversation
-     *
-     * @return int []
-     * @noinspection PhpUnnecessaryLocalVariableInspection*/
+     * @deprecated
+     */
     public function getSearchableRecipients(): array
     {
-        $recipients = array_keys($this->recipients);
-        $recipients[] = $this->user_id;
-        // array_values ensures the value is encoded as a json array, and not a json hash if the php array is not a list
-        $recipients = array_values(array_unique($recipients));
-
-        return $recipients;
+        return $this->getActiveRecipientUserIds();
     }
 
     /**
-     * @deprecated
-     * @return int[]
+     * @return list<int>
      */
-    public function getIndexableRecipients(): array
+    public function getRecipientUserIds(): array
     {
-        return $this->getDiscussionUserIds();
+        if (\XF::$versionId >= 2030000)
+        {
+            return parent::getRecipientUserIds();
+        }
+
+        return \XF::db()->fetchAllColumn(
+            'SELECT user_id
+				FROM xf_conversation_recipient
+				WHERE conversation_id = ?',
+            [$this->conversation_id]
+        );
+    }
+
+    /**
+     * @return list<int>
+     */
+    public function getActiveRecipientUserIds(): array
+    {
+        if (\XF::$versionId >= 2030000)
+        {
+            return parent::getActiveRecipientUserIds();
+        }
+
+        return $this->db()->fetchAllColumn(
+            'SELECT user_id
+				FROM xf_conversation_recipient
+				WHERE conversation_id = ? AND recipient_state = ?',
+            [$this->conversation_id, 'active']
+        );
     }
 
     /**
@@ -171,6 +192,12 @@ class ConversationMaster extends XFCP_ConversationMaster implements ISearchableD
             },
             'checkForUpdates'  => ['recipients'],
         ];
+
+        if (\XF::$versionId < 2030000)
+        {
+            $structure->getters['recipient_user_ids'] = ['getter' => 'getRecipientUserIds', 'cache' => true];
+			$structure->getters['active_recipient_user_ids'] = ['getter' => 'getActiveRecipientUserIds', 'cache' => true];
+        }
 
         return $structure;
     }

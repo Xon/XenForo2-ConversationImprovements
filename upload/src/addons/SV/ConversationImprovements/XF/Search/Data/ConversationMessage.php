@@ -65,11 +65,7 @@ class ConversationMessage extends XFCP_ConversationMessage
         $repo = SearchRepo::get();
         if (!$repo->isUsingElasticSearch())
         {
-            return $isOnlyType
-                // discussion_user is only populated when XFES is enabled, this likely should change
-                ? [new MetadataConstraint('recipients', $userId)]
-                // Search Improvements and/or/type constraints are XFES only and don't support mysql
-                : [];
+            return parent::getTypePermissionConstraints($query, $isOnlyType);
         }
 
         if ($userId === 0)
@@ -85,7 +81,7 @@ class ConversationMessage extends XFCP_ConversationMessage
             ];
         }
 
-        $viewConstraint = new MetadataConstraint('discussion_user', $userId);
+        $viewConstraint = new MetadataConstraint('active_recipients', $userId);
         if ($isOnlyType)
         {
             // Note; ElasticSearchEssentials forces all getTypePermissionConstraints to have $isOnlyType=true as it knows how to compose multiple types together
@@ -104,5 +100,16 @@ class ConversationMessage extends XFCP_ConversationMessage
                 )
             )
         ];
+    }
+
+    public function getTypePermissionTypeConstraints(Query $query, bool $isOnlyType): array
+    {
+        $repo = SearchRepo::get();
+        if (!$repo->isUsingElasticSearch())
+        {
+            return parent::getTypePermissionTypeConstraints($query, $isOnlyType);
+        }
+
+        return [];
     }
 }
