@@ -49,15 +49,6 @@ class ConversationMessage extends XFCP_ConversationMessage
         return $this->getTypeOrderTrait($order);
     }
 
-    /**
-     * @return string
-     * @noinspection PhpMissingParentCallCommonInspection
-     */
-    public function getTemplateName()
-    {
-        return 'public:sv_convimprov_search_result_conversation_message';
-    }
-
     /** @noinspection PhpMissingParentCallCommonInspection */
     public function getTypePermissionConstraints(Query $query, $isOnlyType): array
     {

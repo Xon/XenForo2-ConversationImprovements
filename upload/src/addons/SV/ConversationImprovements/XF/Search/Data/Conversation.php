@@ -30,13 +30,4 @@ class Conversation extends XFCP_Conversation
 
         $this->setupDiscussionMetadataStructure($structure);
     }
-
-    /**
-     * @return string
-     * @noinspection PhpMissingParentCallCommonInspection
-     */
-    public function getTemplateName()
-    {
-        return 'public:sv_convimprov_search_result_conversation';
-    }
 }
