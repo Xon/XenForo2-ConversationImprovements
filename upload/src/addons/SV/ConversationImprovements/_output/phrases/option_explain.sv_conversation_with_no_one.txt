@@ -1,1 +1,0 @@
-If enabled, users will be able to create conversations with no recipient.

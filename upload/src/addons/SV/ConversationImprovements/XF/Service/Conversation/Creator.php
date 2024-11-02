@@ -16,8 +16,13 @@ class Creator extends XFCP_Creator
      */
     public function setRecipients($recipients, $checkPrivacy = true, $triggerErrors = true)
     {
-        $noRecipientsAllowed = $this->app->options()->sv_conversation_with_no_one;
-        if (!$recipients && $noRecipientsAllowed)
+        if (\XF::$versionId >= 2030000)
+        {
+            parent::setRecipients($recipients, $checkPrivacy, $triggerErrors);
+            return;
+        }
+
+        if (!$recipients)
         {
             $starter = $this->starter;
             $this->recipients = [$starter->user_id => $starter];
