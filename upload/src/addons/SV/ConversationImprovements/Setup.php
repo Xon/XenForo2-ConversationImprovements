@@ -94,11 +94,6 @@ class Setup extends AbstractSetup
         \XF::logError('Recommend rebuilding conversation messages search index', true);
     }
 
-    public function upgrade1730527931Step1(): void
-    {
-        $this->setupOrRepairSearchHandlers();
-    }
-
     public function postUpgrade($previousVersion, array &$stateChanges): void
     {
         $atomicJobs = [];
