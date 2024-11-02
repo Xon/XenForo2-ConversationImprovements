@@ -26,6 +26,12 @@ namespace SV\ConversationImprovements\XF\Repository
 	class XFCP_Conversation extends \XF\Repository\Conversation {}
 }
 
+namespace SV\ConversationImprovements\XF\Search\Data
+{
+	class XFCP_Conversation extends \XF\Search\Data\Conversation {}
+	class XFCP_ConversationMessage extends \XF\Search\Data\ConversationMessage {}
+}
+
 namespace SV\ConversationImprovements\XF\Service\Conversation
 {
 	class XFCP_Creator extends \XF\Service\Conversation\Creator {}
