@@ -1,14 +1,14 @@
 <xf:macro name="search_constraints"
 	arg-conversation="!">
 
-	<xf:if is="{$conversation}">
+	<xf:if is="$conversation">
 		<xf:page option="searchConstraints" value="{{ {
-			phrase('conversations'): {'search_type': 'conversation_message'},
-			phrase('sv_convimprov_this_conversation'): {'search_type': 'conversation_message', 'c': {'conversation': $conversation.conversation_id}}
+			($xf.versionId >= 2030000 ? phrase('direct_messages') : phrase('conversations')): {'search_type': 'conversation_message'},
+			($xf.versionId >= 2030000 ? phrase('this_direct_message') : phrase('sv_convimprov_this_conversation')): {'search_type': 'conversation_message', 'c': {'conversation': $conversation.conversation_id}}
 		} }}" />
 	<xf:else />
 		<xf:page option="searchConstraints" value="{{ {
-			phrase('conversations'): {'search_type': 'conversation_message'}
+			($xf.versionId >= 2030000 ? phrase('direct_messages') : phrase('conversations')): {'search_type': 'conversation_message'}
 		} }}" />
 	</xf:if>
 </xf:macro>
