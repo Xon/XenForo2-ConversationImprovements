@@ -13,6 +13,7 @@ use XF\Entity\ConversationMaster as ConversationMasterEntity;
 use XF\Search\MetadataStructure;
 use XF\Search\Query\MetadataConstraint;
 use XF\Search\Query\Query;
+use XF\Search\Query\SqlOrder;
 
 /**
  * XF2.3+ support
@@ -21,7 +22,10 @@ use XF\Search\Query\Query;
 class ConversationMessage extends XFCP_ConversationMessage
 {
     protected static $svDiscussionEntity = ConversationMasterEntity::class;
-    use DiscussionTrait;
+    use DiscussionTrait
+    {
+        getTypeOrder as protected getTypeOrderTrait;
+    }
 
     protected function getMetaData(\XF\Entity\ConversationMessage $entity): array
     {
@@ -37,6 +41,12 @@ class ConversationMessage extends XFCP_ConversationMessage
         parent::setupMetadataStructure($structure);
 
         $this->setupDiscussionMetadataStructure($structure);
+    }
+
+    /** @noinspection PhpMissingParentCallCommonInspection */
+    public function getTypeOrder($order): ?SqlOrder
+    {
+        return $this->getTypeOrderTrait($order);
     }
 
     /**
