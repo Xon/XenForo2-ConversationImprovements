@@ -2,6 +2,8 @@
 
 namespace SV\ConversationImprovements;
 
+use SV\ConversationImprovements\Search\Data\Conversation as OldConversationHandler;
+use SV\ConversationImprovements\Search\Data\ConversationMessage as OldConversationMessageHandler;
 use SV\StandardLib\Helper;
 use SV\StandardLib\InstallerHelper;
 use XF\AddOn\AbstractSetup;
@@ -13,6 +15,8 @@ use XF\Entity\ContentTypeField as ContentTypeFieldEntity;
 use XF\Finder\ContentTypeField as ContentTypeFieldFinder;
 use XF\Job\Atomic as AtomicJob;
 use XF\Job\PermissionRebuild as PermissionRebuildJob;
+use XF\Search\Data\Conversation as NewConversationHandler;
+use XF\Search\Data\ConversationMessage as NewConversationMessageHandler;
 
 /**
  * Handles installation, upgrades, and uninstallation of the add-on.
@@ -249,13 +253,11 @@ class Setup extends AbstractSetup
         return $applied;
     }
 
-    /** @noinspection PhpFullyQualifiedNameUsageInspection */
     public function setupOrRepairSearchHandlers(): void
     {
         $convSearchHandler = Helper::finder(ContentTypeFieldFinder::class)
                                    ->where('content_type', 'conversation')
                                    ->where('field_name', 'search_handler_class')
-                                   ->where('field_value', \SV\ConversationImprovements\Search\Data\Conversation::class)
                                    ->fetchOne();
         if ($convSearchHandler === null)
         {
@@ -267,7 +269,6 @@ class Setup extends AbstractSetup
         $convMessageSearchHandler = Helper::finder(ContentTypeFieldFinder::class)
                                           ->where('content_type', 'conversation_message')
                                           ->where('field_name', 'search_handler_class')
-                                          ->where('field_value', \SV\ConversationImprovements\Search\Data\ConversationMessage::class)
                                           ->fetchOne();
         if ($convMessageSearchHandler === null)
         {
@@ -279,18 +280,18 @@ class Setup extends AbstractSetup
         if (\XF::$versionId >= 2030000)
         {
             $convSearchHandler->addon_id = 'XF';
-            $convSearchHandler->field_value = \XF\Search\Data\Conversation::class;
+            $convSearchHandler->field_value = NewConversationHandler::class;
 
             $convMessageSearchHandler->addon_id = 'XF';
-            $convMessageSearchHandler->field_value = \XF\Search\Data\ConversationMessage::class;
+            $convMessageSearchHandler->field_value = NewConversationMessageHandler::class;
         }
         else
         {
             $convSearchHandler->addon_id = 'SV/ConversationImprovements';
-            $convSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\Conversation::class;
+            $convSearchHandler->field_value = OldConversationHandler::class;
 
             $convMessageSearchHandler->addon_id = 'SV/ConversationImprovements';
-            $convMessageSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\ConversationMessage::class;
+            $convMessageSearchHandler->field_value = OldConversationMessageHandler::class;
         }
 
         $convSearchHandler->saveIfChanged();
