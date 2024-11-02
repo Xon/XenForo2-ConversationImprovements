@@ -61,7 +61,7 @@ class Setup extends AbstractSetup
 
     public function installStep4(): void
     {
-        $this->migrateSearchHandlers();
+        $this->setupOrRepairSearchHandlers();
     }
 
     public function upgrade2000300Step1(): void
@@ -96,7 +96,7 @@ class Setup extends AbstractSetup
 
     public function upgrade1730527931Step1(): void
     {
-        $this->migrateSearchHandlers();
+        $this->setupOrRepairSearchHandlers();
     }
 
     public function postUpgrade($previousVersion, array &$stateChanges): void
@@ -105,7 +105,7 @@ class Setup extends AbstractSetup
         $previousVersion = (int)$previousVersion;
         parent::postUpgrade($previousVersion, $stateChanges);
 
-        $this->migrateSearchHandlers();
+        $this->setupOrRepairSearchHandlers();
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
@@ -124,7 +124,7 @@ class Setup extends AbstractSetup
     public function postRebuild(): void
     {
         parent::postRebuild();
-        $this->migrateSearchHandlers();
+        $this->setupOrRepairSearchHandlers();
     }
 
     /**
@@ -255,58 +255,50 @@ class Setup extends AbstractSetup
     }
 
     /** @noinspection PhpFullyQualifiedNameUsageInspection */
-    public function migrateSearchHandlers(): void
+    public function setupOrRepairSearchHandlers(): void
     {
         $convSearchHandler = Helper::finder(ContentTypeFieldFinder::class)
                                    ->where('content_type', 'conversation')
                                    ->where('field_name', 'search_handler_class')
                                    ->where('field_value', \SV\ConversationImprovements\Search\Data\Conversation::class)
                                    ->fetchOne();
-
+        if ($convSearchHandler !== null)
+        {
+            $convSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
+            $convSearchHandler->content_type = 'conversation';
+            $convSearchHandler->field_name = 'search_handler_class';
+        }
 
         $convMessageSearchHandler = Helper::finder(ContentTypeFieldFinder::class)
                                           ->where('content_type', 'conversation_message')
                                           ->where('field_name', 'search_handler_class')
                                           ->where('field_value', \SV\ConversationImprovements\Search\Data\ConversationMessage::class)
                                           ->fetchOne();
-
+        if ($convMessageSearchHandler !== null)
+        {
+            $convMessageSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
+            $convMessageSearchHandler->content_type = 'conversation_message';
+            $convMessageSearchHandler->field_name = 'search_handler_class';
+        }
 
         if (\XF::$versionId >= 2030000)
         {
-            if ($convSearchHandler !== null)
-            {
-                $convSearchHandler->field_value = \XF\Search\Data\Conversation::class;
-                $convSearchHandler->addon_id = 'XF';
-                $convSearchHandler->saveIfChanged();
-            }
-            if ($convMessageSearchHandler !== null)
-            {
-                $convMessageSearchHandler->field_value = \XF\Search\Data\ConversationMessage::class;
-                $convMessageSearchHandler->addon_id = 'XF';
-                $convMessageSearchHandler->saveIfChanged();
-            }
+            $convSearchHandler->addon_id = 'XF';
+            $convSearchHandler->field_value = \XF\Search\Data\Conversation::class;
+
+            $convMessageSearchHandler->addon_id = 'XF';
+            $convMessageSearchHandler->field_value = \XF\Search\Data\ConversationMessage::class;
         }
         else
         {
-            if ($convSearchHandler === null)
-            {
-                $convSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
-                $convSearchHandler->content_type = 'conversation';
-                $convSearchHandler->field_name = 'search_handler_class';
-                $convMessageSearchHandler->addon_id = 'SV/ConversationImprovements';
-                $convSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\Conversation::class;
-                $convSearchHandler->save();
-            }
+            $convSearchHandler->addon_id = 'SV/ConversationImprovements';
+            $convSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\Conversation::class;
 
-            if ($convMessageSearchHandler === null)
-            {
-                $convMessageSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
-                $convMessageSearchHandler->content_type = 'conversation_message';
-                $convMessageSearchHandler->field_name = 'search_handler_class';
-                $convMessageSearchHandler->addon_id = 'SV/ConversationImprovements';
-                $convMessageSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\ConversationMessage::class;
-                $convMessageSearchHandler->save();
-            }
+            $convMessageSearchHandler->addon_id = 'SV/ConversationImprovements';
+            $convMessageSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\ConversationMessage::class;
         }
+
+        $convSearchHandler->saveIfChanged();
+        $convMessageSearchHandler->saveIfChanged();
     }
 }
