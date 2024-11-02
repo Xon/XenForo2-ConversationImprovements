@@ -7,6 +7,7 @@ namespace SV\ConversationImprovements\XF\Entity;
 
 use SV\SearchImprovements\Search\Features\ISearchableDiscussionUser;
 use XF\Mvc\Entity\Structure;
+use XF\Phrase;
 use function array_keys;
 use function array_unique;
 use function array_values;
@@ -58,7 +59,7 @@ class ConversationMaster extends XFCP_ConversationMaster implements ISearchableD
     }
 
     /**
-     * @param \XF\Phrase|string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      * @noinspection PhpUnusedParameterInspection
      */

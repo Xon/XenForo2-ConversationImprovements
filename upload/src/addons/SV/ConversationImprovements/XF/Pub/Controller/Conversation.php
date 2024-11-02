@@ -5,7 +5,11 @@
 
 namespace SV\ConversationImprovements\XF\Pub\Controller;
 
+use SV\ConversationImprovements\XF\Entity\ConversationMessage as ExtendedConversationMessageEntity;
+use XF\Entity\ConversationMessage as ConversationMessageEntity;
 use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\AbstractReply;
+use XF\Service\Conversation\MessageEditor;
 
 /**
  * @extends \XF\Pub\Controller\Conversation
@@ -14,7 +18,7 @@ class Conversation extends XFCP_Conversation
 {
     /**
      * @param ParameterBag $params
-     * @return \XF\Mvc\Reply\AbstractReply
+     * @return AbstractReply
      */
     public function actionHistory(ParameterBag $params)
     {
@@ -26,7 +30,7 @@ class Conversation extends XFCP_Conversation
 
     /**
      * @param ParameterBag $params
-     * @return \XF\Mvc\Reply\AbstractReply
+     * @return AbstractReply
      */
     public function actionMessagesHistory(ParameterBag $params)
     {
@@ -37,11 +41,10 @@ class Conversation extends XFCP_Conversation
     }
 
     /**
-     * @param \XF\Entity\ConversationMessage|\SV\ConversationImprovements\XF\Entity\ConversationMessage $conversationMessage
-     *
-     * @return \XF\Service\Conversation\MessageEditor
+     * @param ConversationMessageEntity|ExtendedConversationMessageEntity $conversationMessage
+     * @return MessageEditor
      */
-    protected function setupMessageEdit(\XF\Entity\ConversationMessage $conversationMessage)
+    protected function setupMessageEdit(ConversationMessageEntity $conversationMessage)
     {
         $last_edit_date = $conversationMessage->last_edit_date;
         $last_edit_user_id = $conversationMessage->last_edit_user_id;

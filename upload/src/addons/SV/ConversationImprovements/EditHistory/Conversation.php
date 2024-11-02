@@ -9,9 +9,8 @@ use SV\ConversationImprovements\XF\Entity\ConversationMaster as ExtendedConversa
 use SV\ConversationImprovements\XF\Service\Conversation\Editor as ExtendedEditorService;
 use SV\StandardLib\Helper;
 use XF\EditHistory\AbstractHandler;
-use XF\Entity\ConversationMaster;
 use XF\Entity\ConversationMaster as ConversationMasterEntity;
-use XF\Entity\EditHistory;
+use XF\Entity\EditHistory as EditHistoryEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Phrase;
 use XF\Service\Conversation\Editor as EditorService;
@@ -67,7 +66,7 @@ class Conversation extends AbstractHandler
         return $breadcrumbs;
     }
 
-    public function revertToVersion(Entity $content, EditHistory $history, EditHistory $previous = null): ConversationMaster
+    public function revertToVersion(Entity $content, EditHistoryEntity $history, EditHistoryEntity $previous = null): ConversationMasterEntity
     {
         /** @var ExtendedConversationMasterEntity $content */
         /** @var ExtendedEditorService $editor */

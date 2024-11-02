@@ -2,6 +2,10 @@
 
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 
+use SV\ConversationImprovements\XF\Entity\ConversationMessage as ExtendedConversationMessageEntity;
+use XF\Entity\ConversationMessage as ConversationMessageEntity;
+use XF\Repository\EditHistory as EditHistoryRepo;
+
 /**
  * @extends \XF\Service\Conversation\MessageEditor
  */
@@ -65,7 +69,7 @@ class MessageEditor extends XFCP_MessageEditor
 
     protected function setupEditHistory(string $oldMessage): void
     {
-        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMessage $message */
+        /** @var ExtendedConversationMessageEntity $message */
         $message = $this->message;
 
         $message->edit_count++;
@@ -88,7 +92,7 @@ class MessageEditor extends XFCP_MessageEditor
     }
 
     /**
-     * @return \XF\Entity\ConversationMessage
+     * @return ConversationMessageEntity
      * @noinspection PhpMissingReturnTypeInspection
      */
     protected function _save()
@@ -101,7 +105,7 @@ class MessageEditor extends XFCP_MessageEditor
 
         if ($this->oldMessage)
         {
-            /** @var \XF\Repository\EditHistory $repo */
+            /** @var EditHistoryRepo $repo */
             $repo = $this->repository('XF:EditHistory');
             $repo->insertEditHistory('conversation_message', $message, $visitor, $this->oldMessage, $this->app->request()->getIp());
         }

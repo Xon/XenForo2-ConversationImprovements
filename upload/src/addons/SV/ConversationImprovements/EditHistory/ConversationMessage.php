@@ -10,7 +10,7 @@ use SV\ConversationImprovements\XF\Service\Conversation\MessageEditor as Extende
 use SV\StandardLib\Helper;
 use XF\EditHistory\AbstractHandler;
 use XF\Entity\ConversationMessage as ConversationMessageEntity;
-use XF\Entity\EditHistory;
+use XF\Entity\EditHistory as EditHistoryEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Phrase;
 use XF\Service\Conversation\MessageEditor as MessageEditorService;
@@ -69,7 +69,7 @@ class ConversationMessage extends AbstractHandler
         return $breadcrumbs;
     }
 
-    public function revertToVersion(Entity $content, EditHistory $history, EditHistory $previous = null): ConversationMessageEntity
+    public function revertToVersion(Entity $content, EditHistoryEntity $history, EditHistoryEntity $previous = null): ConversationMessageEntity
     {
         /** @var ExtendedConversationMessageEntity $content */
         /** @var ExtendedMessageEditorService $editor */

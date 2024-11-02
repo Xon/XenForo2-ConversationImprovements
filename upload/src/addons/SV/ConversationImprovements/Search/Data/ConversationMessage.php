@@ -13,11 +13,17 @@ use SV\SearchImprovements\XF\Search\Query\Constraints\AndConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\NotConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\PermissionConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\TypeConstraint;
+use XF\Entity\ConversationMaster as ConversationMasterEntity;
+use XF\Http\Request;
 use XF\Mvc\Entity\Entity;
 use XF\Search\Data\AbstractData;
 use XF\Search\IndexRecord;
 use XF\Search\MetadataStructure;
 use XF\Search\Query\MetadataConstraint;
+use XF\Search\Query\Query;
+use XF\Search\Query\SqlConstraint;
+use XF\Search\Query\SqlOrder;
+use XF\Search\Query\TableReference;
 use function is_callable;
 
 /**
@@ -26,8 +32,9 @@ use function is_callable;
  */
 class ConversationMessage extends AbstractData
 {
-    protected static $svDiscussionEntity = \XF\Entity\ConversationMaster::class;
+    protected static $svDiscussionEntity = ConversationMasterEntity::class;
     use DiscussionTrait;
+
     /**
      * @param Entity $entity
      * @return IndexRecord|null
@@ -169,11 +176,11 @@ class ConversationMessage extends AbstractData
     }
 
     /**
-     * @param \XF\Search\Query\Query $query
-     * @param \XF\Http\Request       $request
+     * @param Query $query
+     * @param Request       $request
      * @param array                  $urlConstraints
      */
-    public function applyTypeConstraintsFromInput(\XF\Search\Query\Query $query, \XF\Http\Request $request, array &$urlConstraints)
+    public function applyTypeConstraintsFromInput(Query $query, Request $request, array &$urlConstraints)
     {
         $constraints = $request->filter([
             'c.recipients' => 'str',
@@ -189,7 +196,7 @@ class ConversationMessage extends AbstractData
         $minReplyCount = (int)$constraints['c.min_reply_count'];
         if ($minReplyCount !== 0)
         {
-            $query->withSql(new \XF\Search\Query\SqlConstraint(
+            $query->withSql(new SqlConstraint(
                 'conversation.reply_count >= %s',
                 $minReplyCount,
                 $this->getConversationQueryTableReference()
@@ -225,13 +232,13 @@ class ConversationMessage extends AbstractData
 
     /**
      * @param string|mixed $order
-     * @return \XF\Search\Query\SqlOrder|null
+     * @return SqlOrder|null
      */
     public function getTypeOrder($order)
     {
         if ($order === 'replies')
         {
-            return new \XF\Search\Query\SqlOrder(
+            return new SqlOrder(
                 'conversation.reply_count DESC',
                 $this->getConversationQueryTableReference()
             );
@@ -241,11 +248,12 @@ class ConversationMessage extends AbstractData
     }
 
     /**
-     * @param \XF\Search\Query\Query $query
+     * @param Query $query
      * @param bool                   $isOnlyType
      * @return array
+     * @noinspection PhpDocMissingThrowsInspection
      */
-    public function getTypePermissionConstraints(\XF\Search\Query\Query $query, $isOnlyType)
+    public function getTypePermissionConstraints(Query $query, $isOnlyType)
     {
         $userId = (int)\XF::visitor()->user_id;
         $repo = SearchRepo::get();
@@ -311,11 +319,11 @@ class ConversationMessage extends AbstractData
     }
 
     /**
-     * @return \XF\Search\Query\TableReference
+     * @return TableReference
      */
     protected function getConversationQueryTableReference()
     {
-        return new \XF\Search\Query\TableReference(
+        return new TableReference(
             'conversation',
             'xf_conversation_master',
             'conversation.conversation_id = search_index.discussion_id'

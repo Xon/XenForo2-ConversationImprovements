@@ -9,6 +9,7 @@ use SV\SearchImprovements\XF\Search\Query\Constraints\AndConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\NotConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\PermissionConstraint;
 use SV\SearchImprovements\XF\Search\Query\Constraints\TypeConstraint;
+use XF\Entity\ConversationMaster as ConversationMasterEntity;
 use XF\Search\MetadataStructure;
 use XF\Search\Query\MetadataConstraint;
 use XF\Search\Query\Query;
@@ -19,7 +20,7 @@ use XF\Search\Query\Query;
  */
 class ConversationMessage extends XFCP_ConversationMessage
 {
-    protected static $svDiscussionEntity = \XF\Entity\ConversationMaster::class;
+    protected static $svDiscussionEntity = ConversationMasterEntity::class;
     use DiscussionTrait;
 
     protected function getMetaData(\XF\Entity\ConversationMessage $entity): array
@@ -40,12 +41,14 @@ class ConversationMessage extends XFCP_ConversationMessage
 
     /**
      * @return string
+     * @noinspection PhpMissingParentCallCommonInspection
      */
     public function getTemplateName()
     {
         return 'public:sv_convimprov_search_result_conversation_message';
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function getTypePermissionConstraints(Query $query, $isOnlyType): array
     {
         $userId = (int)\XF::visitor()->user_id;

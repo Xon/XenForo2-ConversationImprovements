@@ -8,6 +8,8 @@ use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
+use XF\Job\Atomic as AtomicJob;
+use XF\Job\PermissionRebuild as PermissionRebuildJob;
 
 /**
  * Handles installation, upgrades, and uninstallation of the add-on.
@@ -84,25 +86,22 @@ class Setup extends AbstractSetup
         \XF::logError('Recommend rebuilding conversation messages search index', true);
     }
 
-    /**
-     * @param int   $previousVersion
-     * @param array $stateChanges
-     */
     public function postUpgrade($previousVersion, array &$stateChanges): void
     {
         $atomicJobs = [];
         $previousVersion = (int)$previousVersion;
+        parent::postUpgrade($previousVersion, $stateChanges);
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
-            $atomicJobs[] = \XF\Job\PermissionRebuild::class;
+            $atomicJobs[] = PermissionRebuildJob::class;
         }
 
         if ($atomicJobs)
         {
             \XF::app()->jobManager()->enqueueUnique(
                 'conversation-improvements-installer',
-                \XF\Job\Atomic::class, ['execute' => $atomicJobs]
+                AtomicJob::class, ['execute' => $atomicJobs]
             );
         }
     }

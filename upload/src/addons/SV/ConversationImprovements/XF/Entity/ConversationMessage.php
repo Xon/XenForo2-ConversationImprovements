@@ -6,6 +6,7 @@
 namespace SV\ConversationImprovements\XF\Entity;
 
 use XF\Mvc\Entity\Structure;
+use XF\Phrase;
 use function is_callable;
 
 /**
@@ -21,7 +22,7 @@ use function is_callable;
 class ConversationMessage extends XFCP_ConversationMessage
 {
     /**
-     * @param \XF\Phrase|string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      * @noinspection PhpUnusedParameterInspection
      */

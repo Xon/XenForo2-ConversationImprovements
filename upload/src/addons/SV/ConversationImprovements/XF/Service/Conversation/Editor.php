@@ -2,6 +2,10 @@
 
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 
+use SV\ConversationImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
+use XF\Entity\ConversationMaster as ConversationMasterEntity;
+use XF\Repository\EditHistory as EditHistoryRepo;
+
 /**
  * @extends \XF\Service\Conversation\Editor
  */
@@ -48,7 +52,7 @@ class Editor extends XFCP_Editor
      */
     public function setTitle($title)
     {
-        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMaster $conversation */
+        /** @var ExtendedConversationMasterEntity $conversation */
         $conversation = $this->conversation;
 
         $setupHistory = !$conversation->isChanged('title');
@@ -64,7 +68,7 @@ class Editor extends XFCP_Editor
 
     protected function setupEditHistory(string $oldTitle): void
     {
-        /** @var \SV\ConversationImprovements\XF\Entity\ConversationMaster $conversation */
+        /** @var ExtendedConversationMasterEntity $conversation */
         $conversation = $this->conversation;
 
         $conversation->edit_count++;
@@ -87,7 +91,7 @@ class Editor extends XFCP_Editor
     }
 
     /**
-     * @return \XF\Entity\ConversationMaster
+     * @return ConversationMasterEntity
      * @noinspection PhpMissingReturnTypeInspection
      */
     protected function _save()
@@ -100,7 +104,7 @@ class Editor extends XFCP_Editor
 
         if ($this->oldTitle)
         {
-            /** @var \XF\Repository\EditHistory $repo */
+            /** @var EditHistoryRepo $repo */
             $repo = $this->repository('XF:EditHistory');
             $repo->insertEditHistory('conversation', $conversation, $visitor, $this->oldTitle, $this->app->request()->getIp());
         }
