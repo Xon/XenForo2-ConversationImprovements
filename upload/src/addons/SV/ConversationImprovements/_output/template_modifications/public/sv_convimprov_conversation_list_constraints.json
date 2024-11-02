@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "preg_replace",
     "find": "/$/isU",
-    "replace": "$0\n<xf:macro template=\"sv_convimprov_conversation_macros\" name=\"search_constraints\"\n\t\t  arg-conversation=\"{{ null }}\" />"
+    "replace": "$0\n<xf:macro name=\"sv_convimprov_conversation_macros::search_constraints\"\n\t\t  arg-conversation=\"{{ null }}\" />"
 }

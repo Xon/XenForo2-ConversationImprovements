@@ -1,5 +1,5 @@
 <xf:if is="$message.canEditSilently()">
 	<xf:formrow rowtype="{{ $quickEdit ? 'fullWidth noLabel' : '' }}">
-		<xf:macro template="helper_action" name="edit_type" arg-canEditSilently="{$message.canEditSilently()}" />
+		<xf:macro name="helper_action::edit_type" arg-canEditSilently="{$message.canEditSilently()}" />
 	</xf:formrow>
 </xf:if>

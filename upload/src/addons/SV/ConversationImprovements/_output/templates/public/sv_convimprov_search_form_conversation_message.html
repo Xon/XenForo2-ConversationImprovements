@@ -1,25 +1,25 @@
 <xf:title>{{ phrase('sv_convimprov_search_conversations') }}</xf:title>
 
-<xf:macro template="search_form_macros" name="keywords"
+<xf:macro name="search_form_macros::keywords"
 	arg-input="{$input}" />
-<xf:macro template="search_form_macros" name="user"
+<xf:macro name="search_form_macros::user"
 	arg-input="{$input}" />
 <xf:textboxrow name="c[recipients]" value="{$input.c.recipients}" ac="true"
 	label="{{ phrase('received_by') }}"
 	explain="{{ phrase('separate_names_with_comma') }}" />
-<xf:macro template="search_form_macros" name="date"
+<xf:macro name="search_form_macros::date"
 	arg-input="{$input}" />
 
 <xf:numberboxrow name="c[min_reply_count]" value="{$input.c.min_reply_count|default(0)}" min="0"
 	label="{{ phrase('minimum_number_of_replies') }}" />
 
-<xf:macro template="search_form_macros" name="order"
+<xf:macro name="search_form_macros::order"
 	arg-isRelevanceSupported="{$isRelevanceSupported}"
 	arg-options="{{ {
 		'replies': phrase('most_replies')
 	} }}"
 	arg-input="{$input}" />
 
-<xf:macro template="search_form_macros" name="grouped"
+<xf:macro name="search_form_macros::grouped"
 	arg-label="{{ phrase('sv_convimprov_display_results_as_conversations') }}"
 	arg-input="{$input}" />
