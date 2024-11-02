@@ -257,7 +257,7 @@ class Setup extends AbstractSetup
                                    ->where('field_name', 'search_handler_class')
                                    ->where('field_value', \SV\ConversationImprovements\Search\Data\Conversation::class)
                                    ->fetchOne();
-        if ($convSearchHandler !== null)
+        if ($convSearchHandler === null)
         {
             $convSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
             $convSearchHandler->content_type = 'conversation';
@@ -269,7 +269,7 @@ class Setup extends AbstractSetup
                                           ->where('field_name', 'search_handler_class')
                                           ->where('field_value', \SV\ConversationImprovements\Search\Data\ConversationMessage::class)
                                           ->fetchOne();
-        if ($convMessageSearchHandler !== null)
+        if ($convMessageSearchHandler === null)
         {
             $convMessageSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
             $convMessageSearchHandler->content_type = 'conversation_message';
