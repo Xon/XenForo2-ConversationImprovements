@@ -1,5 +1,0 @@
-{
-    "content_type": "conversation_message",
-    "field_name": "search_handler_class",
-    "field_value": "SV\\ConversationImprovements\\Search\\Data\\ConversationMessage"
-}

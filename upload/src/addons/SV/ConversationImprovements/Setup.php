@@ -2,12 +2,15 @@
 
 namespace SV\ConversationImprovements;
 
+use SV\StandardLib\Helper;
 use SV\StandardLib\InstallerHelper;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
+use XF\Entity\ContentTypeField as ContentTypeFieldEntity;
+use XF\Finder\ContentTypeField as ContentTypeFieldFinder;
 use XF\Job\Atomic as AtomicJob;
 use XF\Job\PermissionRebuild as PermissionRebuildJob;
 
@@ -56,6 +59,11 @@ class Setup extends AbstractSetup
         $this->applyDefaultPermissions();
     }
 
+    public function installStep4(): void
+    {
+        $this->migrateSearchHandlers();
+    }
+
     public function upgrade2000300Step1(): void
     {
         $this->installStep1();
@@ -86,11 +94,18 @@ class Setup extends AbstractSetup
         \XF::logError('Recommend rebuilding conversation messages search index', true);
     }
 
+    public function upgrade1730527931Step1(): void
+    {
+        $this->migrateSearchHandlers();
+    }
+
     public function postUpgrade($previousVersion, array &$stateChanges): void
     {
         $atomicJobs = [];
         $previousVersion = (int)$previousVersion;
         parent::postUpgrade($previousVersion, $stateChanges);
+
+        $this->migrateSearchHandlers();
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
@@ -104,6 +119,12 @@ class Setup extends AbstractSetup
                 AtomicJob::class, ['execute' => $atomicJobs]
             );
         }
+    }
+
+    public function postRebuild(): void
+    {
+        parent::postRebuild();
+        $this->migrateSearchHandlers();
     }
 
     /**
@@ -231,5 +252,61 @@ class Setup extends AbstractSetup
         }
 
         return $applied;
+    }
+
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
+    public function migrateSearchHandlers(): void
+    {
+        $convSearchHandler = Helper::finder(ContentTypeFieldFinder::class)
+                                   ->where('content_type', 'conversation')
+                                   ->where('field_name', 'search_handler_class')
+                                   ->where('field_value', \SV\ConversationImprovements\Search\Data\Conversation::class)
+                                   ->fetchOne();
+
+
+        $convMessageSearchHandler = Helper::finder(ContentTypeFieldFinder::class)
+                                          ->where('content_type', 'conversation_message')
+                                          ->where('field_name', 'search_handler_class')
+                                          ->where('field_value', \SV\ConversationImprovements\Search\Data\ConversationMessage::class)
+                                          ->fetchOne();
+
+
+        if (\XF::$versionId >= 2030000)
+        {
+            if ($convSearchHandler !== null)
+            {
+                $convSearchHandler->field_value = \XF\Search\Data\Conversation::class;
+                $convSearchHandler->addon_id = 'XF';
+                $convSearchHandler->saveIfChanged();
+            }
+            if ($convMessageSearchHandler !== null)
+            {
+                $convMessageSearchHandler->field_value = \XF\Search\Data\ConversationMessage::class;
+                $convMessageSearchHandler->addon_id = 'XF';
+                $convMessageSearchHandler->saveIfChanged();
+            }
+        }
+        else
+        {
+            if ($convSearchHandler === null)
+            {
+                $convSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
+                $convSearchHandler->content_type = 'conversation';
+                $convSearchHandler->field_name = 'search_handler_class';
+                $convMessageSearchHandler->addon_id = 'SV/ConversationImprovements';
+                $convSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\Conversation::class;
+                $convSearchHandler->save();
+            }
+
+            if ($convMessageSearchHandler === null)
+            {
+                $convMessageSearchHandler = Helper::createEntity(ContentTypeFieldEntity::class);
+                $convMessageSearchHandler->content_type = 'conversation_message';
+                $convMessageSearchHandler->field_name = 'search_handler_class';
+                $convMessageSearchHandler->addon_id = 'SV/ConversationImprovements';
+                $convMessageSearchHandler->field_value = \SV\ConversationImprovements\Search\Data\ConversationMessage::class;
+                $convMessageSearchHandler->save();
+            }
+        }
     }
 }
