@@ -3,6 +3,7 @@
 namespace SV\ConversationImprovements\XF\Service\Conversation;
 
 use SV\ConversationImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
+use SV\StandardLib\Helper;
 use XF\Entity\ConversationMaster as ConversationMasterEntity;
 use XF\Repository\EditHistory as EditHistoryRepo;
 
@@ -104,8 +105,7 @@ class Editor extends XFCP_Editor
 
         if ($this->oldTitle)
         {
-            /** @var EditHistoryRepo $repo */
-            $repo = $this->repository('XF:EditHistory');
+            $repo = Helper::repository(EditHistoryRepo::class);
             $repo->insertEditHistory('conversation', $conversation, $visitor, $this->oldTitle, $this->app->request()->getIp());
         }
 
