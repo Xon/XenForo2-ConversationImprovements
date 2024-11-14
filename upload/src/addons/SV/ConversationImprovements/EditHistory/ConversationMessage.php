@@ -35,7 +35,7 @@ class ConversationMessage extends AbstractHandler
     public function getContentTitle(Entity $content): Phrase
     {
         /** @var ConversationMessageEntity $content */
-        return \XF::phrase(\XF::$versionId > 2030000 ? 'direct_message_reply_in_x' : 'conversation_message_in_x', [
+        return \XF::phrase(\XF::$versionId >= 2030000 ? 'direct_message_reply_in_x' : 'conversation_message_in_x', [
             'title' => $content->Conversation->title,
         ]);
     }
@@ -56,7 +56,7 @@ class ConversationMessage extends AbstractHandler
         $router = \XF::app()->router('public');
 
         $breadcrumbs[] = [
-            'value' => \XF::phrase(\XF::$versionId > 2030000 ? 'direct_messages' : 'conversations'),
+            'value' => \XF::phrase(\XF::$versionId >= 2030000 ? 'direct_messages' : 'conversations'),
             'href'  => $router->buildLink('conversations'),
         ];
 

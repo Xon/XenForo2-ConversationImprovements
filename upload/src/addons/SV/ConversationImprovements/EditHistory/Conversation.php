@@ -34,7 +34,7 @@ class Conversation extends AbstractHandler
 
     public function getContentTitle(Entity $content): Phrase
     {
-        return \XF::phrase(\XF::$versionId > 2030000 ? 'direct_message_title' : 'conversation_title');
+        return \XF::phrase(\XF::$versionId >= 2030000 ? 'direct_message_title' : 'conversation_title');
     }
 
     public function getContentText(Entity $content): string
@@ -53,7 +53,7 @@ class Conversation extends AbstractHandler
         $router = \XF::app()->router('public');
 
         $breadcrumbs[] = [
-            'value' => \XF::phrase(\XF::$versionId > 2030000 ? 'direct_messages' : 'conversations'),
+            'value' => \XF::phrase(\XF::$versionId >= 2030000 ? 'direct_messages' : 'conversations'),
             'href'  => $router->buildLink('conversations'),
         ];
 
