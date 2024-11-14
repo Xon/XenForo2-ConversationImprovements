@@ -50,12 +50,8 @@ class ConversationRecipient extends XFCP_ConversationRecipient
         $conversation->clearCache('recipient_user_ids');
         $conversation->clearCache('active_recipient_user_ids');
 
-        /** @var IndexableContainer|null $indexableContainer */
+        /** @var IndexableContainer $indexableContainer */
         $indexableContainer = $conversation->getBehavior('XF:IndexableContainer');
-        if ($indexableContainer === null)
-        {
-            return;
-        }
         $indexableContainer->triggerReindex();
     }
 }
