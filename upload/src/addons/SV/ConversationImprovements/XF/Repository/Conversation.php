@@ -18,7 +18,7 @@ class Conversation extends XFCP_Conversation
     {
         $newRecipients = parent::getValidatedRecipients($recipients, $from, $error, $checkPrivacy);
 
-        if (\XF::$versionId >= 2030000 &&
+        if (\XF::$versionId < 2030000 &&
             !$newRecipients &&
             Globals::$noRecipientsAllowed &&
             $error instanceof Phrase &&
